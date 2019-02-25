@@ -38,6 +38,17 @@ get_c <- function(input,z){
   return(input$E%*%exp(z))
 }
 
+d_eta(input,eta,kappa_v){
+  return(-1/2*t(eta)%*%(diag.spam(kappa_v,input$n)%*%eta) + 
+           t(eta)%*%(kappa_v*u) + t(eta)%*%input$y-t(exp(eta))%*%E)
+}
+
+acceptance_prob <- function(input,eta_temp, eta,kappa_v,kappa_u,u){
+  return(min(0,d_eta(input_eta_temp,kappa_v) - d_eta(input,eta,kappa_v) +
+               r_eta_prop(input,eta,u,kappa_u,kappa_v)$prob - 
+               r_eta_prop(input,eta,u,kappa_u,kappa_v)$prob))
+}
+# dette er feil :=) du bruker listene hehe :)~
 
 ## ---- 21
 # Draw samples from the full condition of kappa_u
@@ -70,11 +81,11 @@ r_u <- functuion(input,kappa_v,kappa_v){
 r_eta_prop <- function(input,z,u,kappa_u,kappa_v){
   c_mat = get_c(input,z)
   b_mat = get_b(input,z)
-  return(rmvnorm.canonical(
-    n = 1,
-    b = kappa_v%*%u + b_mat,
-    Q = diag.spam(kappa_v, n) + diag.spam(c_mat))
-  )
+  b = kappa_v%*%u + b_mat
+  Q = diag.spam(kappa_v, n) + diag.spam(c_mat)
+  sample = rmvnorm.canonical(n = 1, b = b, Q = Q)
+  prob = dmvnorm.canonical(x = sample, b = b, Q = Q, log = TRUE)
+  return(list(sample=sample,prob=prob))
 }
 ## ---- 25
 # acceptance of proposal eta
