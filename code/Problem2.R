@@ -38,36 +38,35 @@ get_c <- function(input,z){
   return(input$E%*%exp(z))
 }
 
-d_eta(input,eta,kappa_v){
+d_eta <- function(input,eta,kappa_v,u){
   return(-1/2*t(eta)%*%(diag.spam(kappa_v,input$n)%*%eta) + 
            t(eta)%*%(kappa_v*u) + t(eta)%*%input$y-t(exp(eta))%*%E)
 }
 
-acceptance_prob <- function(input,eta_temp, eta,kappa_v,kappa_u,u){
-  return(min(0,d_eta(input_eta_temp,kappa_v) - d_eta(input,eta,kappa_v) +
-               r_eta_prop(input,eta,u,kappa_u,kappa_v)$prob - 
-               r_eta_prop(input,eta,u,kappa_u,kappa_v)$prob))
+acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
+  return(min(1,exp(d_eta(input,eta_prop,kappa_v,u) - d_eta(input,eta,kappa_v,u) +
+               - eta_prop$prob + eta$porb)))
 }
-# dette er feil :=) du bruker listene hehe :)~
+
 
 ## ---- 21
 # Draw samples from the full condition of kappa_u
-r_kappa_u <- function(input){
+r_kappa_u <- function(input,u){
   shape = (input$n-1)/2 + input$alpha
-  rate = 1/2 * (t(u) %*%R ) %*% u + input$beta
+  rate = 0.5 * t(u) %*% input$R %*% u + input$beta
   return(rgamma(n = 1, shape = shape, rate = rate))
 }
 
 ## ---- 22
 # Draw samples from the full condition of kappa_v
-r_kappa_v <- function(input){
-  shape = n/2 + input$alpha
-  rate = 1/2 * (t(eta-u)) %*% (eta - u) + input$beta
+r_kappa_v <- function(input,eta,u){
+  shape = input$n/2 + input$alpha
+  rate = 1/2 * (t(eta$sample-u)) %*% (eta$sample - u) + input$beta
   return(rgamma(n = 1 ,shape = shape, rate = rate))
 }
 ## ---- 23
 # draw samples from the full conditional of u
-r_u <- functuion(input,kappa_v,kappa_v){
+r_u <- functuion(input,kappa_u,kappa_v){
   inverted.calc <- solve(diag.spam(k_v, input$n) + kappa_u*R)
   return(rmvnorm.canonical(
     n = 1, 
@@ -78,7 +77,7 @@ r_u <- functuion(input,kappa_v,kappa_v){
 
 ## ---- 24
 # draw samples from the proposal density of eta
-r_eta_prop <- function(input,z,u,kappa_u,kappa_v){
+r_eta_prop <- function(input,z,u,kappa_v){
   c_mat = get_c(input,z)
   b_mat = get_b(input,z)
   b = kappa_v%*%u + b_mat
@@ -89,7 +88,19 @@ r_eta_prop <- function(input,z,u,kappa_u,kappa_v){
 }
 ## ---- 25
 # acceptance of proposal eta
-
-
+u = rep(0.0,input$n)
+eta <- list(sample = rep(0.0,input$n), prob = 1)
+i = 0
+while (i < input$M){
+  kappa_u = r_kappa_u(input,u)
+  kappa_v = r_kappa_V(input,eta,u)
+  u = r_u(input,kappa_u,kappa_v)
+  eta_prop = r_eta_prop(input,eta,u,kappa_v)
+  accept_prob <- acceptance_prob(input,eta_prop,eta,kappa_v,u)
+  if(ruinf(1) < accept_prob){
+    eta = eta_prop
+    i = i + 1
+  }
+}
 
 
