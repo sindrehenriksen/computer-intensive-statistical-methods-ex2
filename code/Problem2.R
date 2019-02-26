@@ -17,7 +17,7 @@ germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
 set.seed(123)
 # loading data
-R = load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
+load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 
 
 input <- list(
@@ -27,15 +27,15 @@ input <- list(
   alpha = 1, 
   beta = 0.01,
   M = 50000,
-  R = R
+  R = matrix(R@entries,length(Oral$Y),length(Oral$Y))
   )
 
 get_b <- function(input,z){
-  return(y+E%*%exp(z))
+  return(input$y+E%*%exp(z$sample))
 }
 
 get_c <- function(input,z){
-  return(input$E%*%exp(z))
+  return(input$E%*%exp(z$sample))
 }
 
 d_eta <- function(input,eta,kappa_v,u){
@@ -66,13 +66,11 @@ r_kappa_v <- function(input,eta,u){
 }
 ## ---- 23
 # draw samples from the full conditional of u
-r_u <- functuion(input,kappa_u,kappa_v){
-  inverted.calc <- solve(diag.spam(k_v, input$n) + kappa_u*R)
-  return(rmvnorm.canonical(
-    n = 1, 
-    b = inverted.calc*k_v%*%eta, 
-    Q = inverted.calc)
+r_u <- function(input,kappa_u,kappa_v){
+  inverted_calc<- solve(diag.spam(kappa_v, input$n) + kappa_u*input$R)
+  u = (rmvnorm.canonical(n = 1,  b = kappa_v*inverted_calc%*%eta$sample, Q = inverted_calc)
   )
+  return(u)
 }
 
 ## ---- 24
@@ -88,12 +86,12 @@ r_eta_prop <- function(input,z,u,kappa_v){
 }
 ## ---- 25
 # acceptance of proposal eta
-u = rep(0.0,input$n)
-eta <- list(sample = rep(0.0,input$n), prob = 1)
+u = c(rep_len(0.0,input$n))
+eta <- list(sample = c(rep_len(0.0,input$n)), prob = 1)
 i = 0
 while (i < input$M){
   kappa_u = r_kappa_u(input,u)
-  kappa_v = r_kappa_V(input,eta,u)
+  kappa_v = r_kappa_v(input,eta,u)
   u = r_u(input,kappa_u,kappa_v)
   eta_prop = r_eta_prop(input,eta,u,kappa_v)
   accept_prob <- acceptance_prob(input,eta_prop,eta,kappa_v,u)
