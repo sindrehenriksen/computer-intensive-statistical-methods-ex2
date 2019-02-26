@@ -11,6 +11,8 @@ source("./data/ex2_additionalFiles/ess.R")
 str(Oral)
 attach(Oral)
 library(colorspace)
+library(here)
+here()
 col <- diverge_hcl(8) # blue - red
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
@@ -27,15 +29,15 @@ input <- list(
   alpha = 1, 
   beta = 0.01,
   M = 50000,
-  R = matrix(R@entries,length(Oral$Y),length(Oral$Y))
+  R = R
   )
 
 get_b <- function(input,z){
-  return(input$y+E%*%exp(z$sample))
+  return(input$y+E*exp(z$sample))
 }
 
 get_c <- function(input,z){
-  return(input$E%*%exp(z$sample))
+  return(input$E*exp(z$sample))
 }
 
 d_eta <- function(input,eta,kappa_v,u){
@@ -67,19 +69,21 @@ r_kappa_v <- function(input,eta,u){
 ## ---- 23
 # draw samples from the full conditional of u
 r_u <- function(input,kappa_u,kappa_v){
-  inverted_calc<- solve(diag.spam(kappa_v, input$n) + kappa_u*input$R)
-  u = (rmvnorm.canonical(n = 1,  b = kappa_v*inverted_calc%*%eta$sample, Q = inverted_calc)
-  )
-  return(u)
+  computation<- diag.spam(kappa_v, input$n) + kappa_u*input$R
+  u = rmvnorm.canonical(n = 1,  b = kappa_v*computation%*%eta$sample, Q = computation)
+  return(c(u))
 }
 
 ## ---- 24
 # draw samples from the proposal density of eta
 r_eta_prop <- function(input,z,u,kappa_v){
-  c_mat = get_c(input,z)
-  b_mat = get_b(input,z)
-  b = kappa_v%*%u + b_mat
-  Q = diag.spam(kappa_v, n) + diag.spam(c_mat)
+  c_vec = get_c(input,z)
+  b_vec = get_b(input,z)
+  print(b_vec)
+  b = c(kappa_v*u + b_vec)
+  Q = diag.spam(kappa_v, input$n) + diag.spam(c_vec)
+  print(b[1])
+  print(Q)
   sample = rmvnorm.canonical(n = 1, b = b, Q = Q)
   prob = dmvnorm.canonical(x = sample, b = b, Q = Q, log = TRUE)
   return(list(sample=sample,prob=prob))
