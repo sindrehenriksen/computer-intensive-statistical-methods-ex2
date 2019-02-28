@@ -8,7 +8,7 @@ library(fields, warn.conflicts = FALSE)
 source("./data/ex2_additionalFiles/dmvnorm.R")
 source("./data/ex2_additionalFiles/ess.R")
 library(colorspace)
-
+library(ggpubr)
 ## ---- 2
 
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
@@ -89,74 +89,63 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 }
 
 
-
+# running a MCMC
 M <- 50000
-burn_in <- round(M/5)
-myMCMC <- function(M,input){
-  pb <- txtProgressBar(min = 0, max = M, style = 3)
-  # choosing kappa from the prior
-  kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-  kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-  # choosing u around the mean
-  u = c(rep_len(0.0, input$n))
-  eta <- r_eta_prop(input,u,u,kappa_v)
-  eta_samples <- matrix(NA,nrow=M,ncol=input$n)
-  u_samples <- matrix(NA,nrow=M,ncol=input$n)
-  kappa_u_samples <- vector()
-  kappa_v_samples <- vector()
-  steps <- seq(1,M)
-  count = 0
-  for (i in steps){
-    setTxtProgressBar(pb, i)
-    kappa_u = r_kappa_u(input,u)
-    kappa_v = r_kappa_v(input,eta$sample,u)
-    u = r_u(input,kappa_u,kappa_v,eta$sample)
-    eta_prop = r_eta_prop(input,eta$sample,u,kappa_v)
-    accept_prob <- acceptance_prob(input,eta_prop,eta,kappa_v,u)
-    if(runif(1) < accept_prob){
-      eta = eta_prop
-      count = count+1
-    }
-    eta_samples[i,] = eta$sample
-    u_samples[i,] = u
-    kappa_u_samples = c(kappa_u_samples,kappa_u)
-    kappa_v_samples = c(kappa_v_samples,kappa_v)
+burnin <- 10000
+pb <- txtProgressBar(min = 0, max = M, style = 3)
+# choosing kappa from the prior
+kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+# choosing u around the mean
+u = c(rep_len(0.0, input$n))
+eta <- r_eta_prop(input,u,u,kappa_v)
+eta_samples <- matrix(NA,nrow=M,ncol=input$n)
+u_samples <- matrix(NA,nrow=M,ncol=input$n)
+kappa_u_samples <- vector()
+kappa_v_samples <- vector()
+for (i in seq(1,M)){
+  setTxtProgressBar(pb, i)
+  kappa_u = r_kappa_u(input,u)
+  kappa_v = r_kappa_v(input,eta$sample,u)
+  u = r_u(input,kappa_u,kappa_v,eta$sample)
+  eta_prop = r_eta_prop(input,eta$sample,u,kappa_v)
+  accept_prob <- acceptance_prob(input,eta_prop,eta,kappa_v,u)
+  print(accept_prob)
+  if(runif(1) < accept_prob){
+    eta = eta_prop
   }
-  v_samples <- eta_samples - u_samples
-  samples <- data.frame(
-    steps = steps,
-    eta = eta_samples[,1],
-    v = v_samples[,1],
-    u1 = u_samples[,1],
-    u2 = u_samples[,2],
-    kappa_u = kappa_u_samples,
-    kappa_v = kappa_v_samples
-  )
-  return(samples)
+  eta_samples[i,] = eta$sample
+  u_samples[i,] = u
+  kappa_u_samples = c(kappa_u_samples,kappa_u)
+  kappa_v_samples = c(kappa_v_samples,kappa_v)
 }
 
-## ---- plot
-samples <- myMCMC(M,input)
-ggplot(samples,aes(x = steps)) +
-  geom_line(aes(y = v))
-ggplot(samples,aes(x = steps)) + 
-  geom_line(aes(y = kappa_v))
-ggplot(samples,aes(x = steps)) + 
-  geom_line(aes(y = kappa_u))
-ggplot(samples,aes(x = steps)) + 
-  geom_line(aes(y = u1))
-ggplot(samples,aes(x = steps)) + 
-  geom_line(aes(y = u2))
-ggplot(samples,aes(x = steps)) +
-  geom_line(aes(y = eta))
+v_samples <- data.frame(
+  steps = seq(burnin:M),
+  v1 = eta[,1] - u[,1],
+  v2 = eta[,242] - u[,242],
+  v3 = eta[,493] - u[,493]
+)
+
+u_samples <- data.frame(
+  steps = seq(burnin:M),
+  u1 = u[,1],
+  u2 = u[,242],
+  u3 = u[,493]
+)
+
+kappa_samples <- data.frame(
+  steps = seq(burnin:M),
+  kappa_u = kappa_u_samples[burnin:M],
+  kappa_v = kappa_v_samples[burnin:M]
+)
+
+v1p <- ggplot(v_samples,aes(x = steps)) + 
+  geom_line() + 
+  facet_grid(~.)
+  
+
 
 ggsave("../figures/posteriorSamps.pdf", plot = plotGrid, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
-
-acf(samples$kappa_u)
-acf(samples$kappa_v)
-acf(samples$v)
-acf(samples$u2)
-acf(samples$u1)
-acf(samples$eta)
