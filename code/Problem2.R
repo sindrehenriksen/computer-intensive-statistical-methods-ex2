@@ -1,7 +1,7 @@
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 # Use log densities
-
 # Libraries ------------------------------------
 library(spam)
 library(ggplot2)
@@ -12,8 +12,8 @@ source("./data/ex2_additionalFiles/ess.R")
 str(Oral)
 attach(Oral)
 library(colorspace)
-library(here)
-here()
+library(MASS)
+library(mvtnorm)
 col <- diverge_hcl(8) # blue - red
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
@@ -96,12 +96,13 @@ r_eta_prop <- function(input,z,u,kappa_v){
 
 ## ---- 25
 # acceptance of proposal eta
-M = 50000
-myMCMC <- function(M){
+M = 2000
+myMCMC <- function(M,input){
   pb <- txtProgressBar(min = 0, max = M, style = 3)
-  u = c(rep_len(0.0,input$n))
-  eta <- r_eta_prop(input, u, u, kappa_v = 0.0001)
-  i = 0
+  kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+  kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+  u <- c(rep_len(0.0, input$n))
+  eta <- r_eta_prop(input,u,u,kappa_v)
   eta_samples <- matrix(NA,nrow=M,ncol=input$n)
   u_samples <- matrix(NA,nrow=M,ncol=input$n)
   kappa_u_samples <- vector()
@@ -136,7 +137,7 @@ myMCMC <- function(M){
   )
   return(samples)
 }
-samples <- myMCMC(M)
+samples <- myMCMC(M,input)
 ggplot(samples,aes(x = steps)) +
   geom_line(aes(y = v))
 ggplot(samples,aes(x = steps)) + 
@@ -150,7 +151,6 @@ ggplot(samples,aes(x = steps)) +
 ggplot(samples,aes(x = steps)) +
   geom_line(aes(y = eta))
 
-cat("Accepted iterations: ",samples$count)
 
 acf(samples$kappa_u)
 acf(samples$kappa_v)
