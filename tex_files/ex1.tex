@@ -1,0 +1,123 @@
+\section{}
+\label{sec:ex1}
+
+\paragraph{(a)}
+For the posterior distribution $\prob(\vect{\eta}, \vect{u}, \kappa_u, \kappa_v \given{\vect{y}})$ we have
+%
+\begin{align*}
+    \prob(\vect{\eta}, \vect{u}, \kappa_u, \kappa_v \given{\vect{y}}) &\propto \prob(\vect{y}, \vect{\eta}, \vect{u}, \kappa_u, \kappa_v) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}, \vect{u}, \kappa_u, \kappa_v}) \prob(\vect{\eta} \given{\vect{u}, \kappa_u, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u, \kappa_v}) \prob(\kappa_u \given{\kappa_v}) \prob(\kappa_v) \\
+    &= \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \prob(\kappa_v) \, .
+\end{align*}
+%
+We have that
+%
+\begin{equation}
+\begin{split}
+\label{eq:conditionals}
+    \prob(\vect{y} \given{\vect{\eta}}) &= \prod_{i=1}^n \frac{(E_i e^{\eta_i})^{y_i} \exp \left\{-E_i e^{\eta_i}\right\}}{y_i!} \\
+    &= \exp \left\{\sum_{i=1}^n \eta_i y_i - E_i e^{\eta_i}\right\} \cdot \prod_{i=1}^n \frac{E_i^{y_i}}{y_i!} \\
+    \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) &\propto \kappa_v^{n/2} \exp \left\{- \frac{1}{2} \kappa_v \trsp{(\vect{\eta} - \vect{u})}(\vect{\eta} - \vect{u})\right\} \\
+    \prob(\vect{u} \given{\kappa_u}) &\propto \kappa_u^{(n-1)/2} \exp \left\{-\frac{1}{2}\kappa_u \trsp{\vect{u}}R\vect{u}\right\} \\
+    \prob(\kappa_u) &\propto \kappa_u^{\alpha_u - 1} e^{-\beta_u \kappa_u} \\
+    \prob(\kappa_v) &\propto \kappa_v^{\alpha_v - 1} e^{-\beta_v \kappa_v} \, .
+\end{split}
+\end{equation}
+%
+Thus
+%
+\begin{multline*}
+    \prob(\vect{\eta}, \vect{u}, \kappa_u, \kappa_v \given{\vect{y}}) \propto \kappa_u^{(n-1)/2 + \alpha_u - 1} \kappa_v^{n/2 + \alpha_v - 1} \exp \bigg\{-\beta_u \kappa_u - \beta_v \kappa_v \\
+    - \frac{\kappa_u}{2} \trsp{\vect{u}} R \vect{u} - \frac{\kappa_v}{2} \trsp{(\vect{\eta} - \vect{u})} (\vect{\eta} - \vect{u}) + \sum_{i=1}^n \eta_i y_i - E_i e^{\eta_i}\bigg\} \, .
+\end{multline*}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{(b)}
+Let $\Tilde{f}(\eta_i)$ be the second order Taylor approximation of 
+%
+\begin{equation*}
+    f(\eta_i) = y_i \eta_i - E_i e^{\eta_i} \,
+\end{equation*}
+%
+at a points $z_i$. Then
+%
+\begin{align*}
+    \Tilde{f}(\eta_i) &= f(z_i) + f'(z_i)(\eta_i - z_i) + \frac{1}{2} f''(z_i)(\eta_i - z_i)^2 \\
+    &= y_i z_i - E_i e^{z_i} + (y_i - E_i e^{z_i}) (\eta_i - z_i) - \frac{1}{2} E_i e^{z_i} (\eta_i - z_i)^2 \\
+    &= E_i e^{z_i}(z_i - \frac{1}{2} z_i^2 - 1) + (y_i + E_i e^{z_i} [z_i - 1]) \eta_i - \frac{1}{2} E_i e^{z_i} \eta_i^2 \\
+    &= a_i + b_i \eta_i - \frac{1}{2} c_i \eta_i^2 \, ,
+\end{align*}
+%
+where $a_i = E_i e^{z_i}(z_i - \frac{1}{2} z_i^2 - 1)$, $b_i = y_i + E_i e^{z_i} (z_i - 1)$ and $c_i = E_i e^{z_i}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{(c)}
+The full conditional densities of $\kappa_u$ and $\kappa_v$ are found by using Bayes' rule and the conditionals in \eqref{eq:conditionals}. They are given by
+%
+\begin{align*}
+    \prob(\kappa_u \given{\vect{y}, \vect{\eta}, \vect{u}, \kappa_v}) &= \prob(\kappa_u \given{\vect{u}}) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \prob(\kappa_v) \\
+    &\propto \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \\
+    &\propto \kappa_u^{(n-1)/2 + \alpha_u - 1} \exp \left\{-\kappa_u \left(\frac{1}{2} \trsp{\vect{u}} \matr{R} \vect{u} + \beta_u \right)\right\}
+\end{align*}
+%
+and
+%
+\begin{align*}
+    \prob(\kappa_v \given{\vect{y}, \vect{\eta}, \vect{u}, \kappa_u}) &= \prob(\kappa_v \given{\vect{\eta}, \vect{u}}) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \prob(\kappa_v) \\
+    &\propto \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\kappa_v) \\
+    &\propto \kappa_u^{n/2 + \alpha_v - 1} \exp \left\{-\kappa_v\left[\frac{1}{2} \trsp{(\vect{\eta}-\vect{u})}(\vect{\eta}-\vect{u}) + \beta_v \right]\right\} \, .
+\end{align*}
+%
+Thus $\kappa_u$ and $\kappa_v$ are Gamma distributed with parameters given in the following:
+%
+\begin{equation*}
+    \kappa_u \given{\vect{u}} \sim \G \left(\frac{n-1}{2} + \alpha_u, \frac{1}{2} \trsp{\vect{u}} \matr{R} \vect{u} + \beta_u \right)
+\end{equation*}
+%
+and
+%
+\begin{equation*}
+    \kappa_v \given{\vect{\eta}, \vect{u}} \sim \G \left(\frac{n}{2} + \alpha_v, \frac{1}{2}\trsp{(\vect{\eta}-\vect{u})}(\vect{\eta}-\vect{u}) + \beta_v \right) \, .
+\end{equation*}
+%
+The full conditional posterior density $\prob(\vect{u} \given{\vect{y}, \vect{\eta}, \kappa_u, \kappa_v})$ is given by
+%
+\begin{align*}
+    \prob(\vect{u} \given{\vect{y}, \vect{\eta}, \kappa_u, \kappa_v}) &= \prob(\vect{u} \given{\vect{\eta}, \kappa_u, \kappa_v}) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \prob(\kappa_v) \\
+    &\propto \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \\
+    &\propto \exp \left\{-\frac{1}{2} \trsp{\vect{u}}(\kappa_v \matr{I} + \kappa_u \matr{R}) \vect{u} + \trsp{\vect{u}} (\kappa_v \vect{\eta})\right\} \, .
+\end{align*}
+%
+This is the canonical form of a normal distribution with parameters given in the following:
+%
+\begin{equation*}
+    \vect{u} \given{\vect{\eta}, \kappa_u, \kappa_v} \sim \N ((\kappa_v \matr{I} + \kappa_u \matr{R})^{-1} \kappa_v \vect{\eta}, (\kappa_v \matr{I} + \kappa_u \matr{R})^{-1}) \, .
+\end{equation*}
+%
+Finally, the full conditional posterior density $\prob (\vect{\eta} \given{\vect{y}, \vect{u}, \kappa_u, \kappa_v})$ is given by
+%
+\begin{align*}
+    \prob(\vect{\eta} \given{\vect{y}, \vect{u}, \kappa_u, \kappa_v}) &= \prob(\vect{\eta} \given{\vect{y}, \vect{u}, \kappa_v}) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \prob(\vect{\vect{u}} \given{\kappa_u}) \prob(\kappa_u) \prob(\kappa_v) \\
+    &\propto \prob(\vect{y} \given{\vect{\eta}}) \prob(\vect{\eta} \given{\vect{u}, \kappa_v}) \\
+    &\propto \exp \left\{\sum_{i=1}^n(y_i \eta_i - E_i e^{\eta_i}) - \frac{\kappa_v}{2} \trsp{(\vect{\eta} - \vect{u})}(\vect{\eta} - \vect{u})\right\} \\
+    &\propto \exp \left\{-\frac{1}{2} \trsp{\vect{\eta}} (\kappa_v I) \vect{\eta} + \trsp{\vect{\eta}} (\kappa_v \vect{u}) + f(\vect{\eta})\right\} \, ,
+\end{align*}
+%
+where $f(\vect{\eta}) = \sum_{i=1}^n(y_i \eta_i - E_i e^{\eta_i}) = \sum_{i=1}^n f(\eta_i)$. Approximating $f(\vect{\eta})$ by $\Tilde{f}(\vect{\eta}) = \sum_{i=1}^n \Tilde{f}(\eta_i) = \sum_{i=n}^n (a_i + b_i \eta_i - c_i \eta_i^2 / 2) = \sum_{i=1}^n a_i + \trsp{\vect{\eta}} \vect{b} + \trsp{\vect{\eta}} C \vect{\eta} / 2$, where $\vect{b} = (b_1, \dots, b_n)$ and $C$ is the diagonal matrix with $\vect{c} = (c_1, \dots, c_n)$ on the diagonal, yields the approximation of $\prob(\vect{\eta} \given{\vect{y}, \vect{u}, \kappa_v})$
+%
+\begin{align}
+\label{eq:eta_fc_approx}
+    \probq(\vect{\eta} \given{\vect{z}, \vect{y}, \vect{u}, \kappa_u, \kappa_v}) &= \probq(\vect{\eta} \given{\vect{z}, \vect{y}, \vect{u}, \kappa_v}) \\
+    &\propto \exp \left\{-\frac{1}{2} \trsp{\vect{\eta}} (\kappa_v I + C) \vect{\eta} + \trsp{\vect{\eta}} (\kappa_v \vect{u} + \vect{b})\right\} \, ,
+\end{align}
+%
+where $\vect{z} = (z_1, \dots, z_n)$, i.e. the vector at which the Taylor approximation is computed. \eqref{eq:eta_fc_approx} is the canonical form of the density of the Normal distribution
+%
+\begin{equation*}
+    \N ((\kappa_v I + C)^{-1} (\kappa_v \vect{u} + b), (\kappa_v I + C)^{-1})) \, .
+\end{equation*}
