@@ -2,18 +2,25 @@
 \usepackage[margin=1.5in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
+\usepackage{bm}
 
 \renewcommand{\thesection}{Exercise \arabic{section}}
 
-\newcommand{\G}{\mathrm{\Gamma}} % Gamma function
+\newcommand{\G}{\mathrm{Gamma}} % Gamma distribution
+\newcommand{\N}{\mathcal{N}} % normal distribution
+\newcommand{\Pois}{\mathrm{Pois}} % Poisson distribution
 \newcommand{\E}{{\rm I\kern-.3em E}} % expectation
 \newcommand{\Var}{\mathrm{Var}} % variance
 \newcommand{\Cov}{\mathrm{Cov}} % covariance
 \newcommand{\Corr}{\mathrm{Corr}} % correlation
-\newcommand{\vect}[1]{\ensuremath{\mathbf{#1}}} % vector
+\newcommand{\vect}[1]{\bm{#1}} % vector
 \newcommand{\matr}[1]{#1} % matrix
 \newcommand{\R}{\mathbb{R}} % real numbers set
+\newcommand{\prob}[1]{\mathrm{p}#1} % probability p()
+\newcommand{\probq}[1]{\mathrm{q}#1} % probability approx q()
+\newcommand{\trsp}[1]{{#1}^\intercal} % transpose
+\newcommand{\given}[1]{\, | \, #1} % given
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1mm} 
@@ -26,33 +33,24 @@
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{intro}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{ex1}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{ex2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{ex3}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{ex4}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{}
-\label{sec:ex1}
-\input{ex1}
+\include{ex5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{ex6}
 
 \end{document}

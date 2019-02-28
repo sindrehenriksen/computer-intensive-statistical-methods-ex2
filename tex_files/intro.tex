@@ -1,0 +1,58 @@
+\section*{}
+\label{sec:intro}
+
+The goal of this exercise is to carry out a spatial analysis on mortality rates of oral cavity cancer in males in Germany during a 5-year period, 1986–1990, for $n = 544$ districts. Observed counts are denoted $y_i$, expected counts $E_i$.
+
+We assume observed counts to be conditionally independent Poisson. Thus the model is
+%
+\begin{equation*}
+    y_i \given{\eta_i} \sim \Pois(E_i e^{\eta_i}), \quad i = 1, \dots, n \, ,
+\end{equation*}
+%
+where $\vect{\eta} = (\trsp{\eta_1, \dots, \eta_n)}$ is the log relative risk. $\vect{\eta}$ is further decomposed into
+%
+\begin{equation*}
+    \vect{\eta} = \vect{u} + \vect{v} \, .
+\end{equation*}
+%
+$\vect{u} = \trsp{(u_1, \dots, u_n)}$ is spatially structured with smoothing parameter $\kappa_u$. $\vect{v} = \trsp{(v_1, \dots, v_n)}$ is unstructured white noise with precision parameter $\kappa_v$, i.e. $\vect{v} \sim \N(\vect{0}, \kappa_v^{-1}I)$.
+
+Next we introduce a spatially correlated effect is by assuming that neighbouring districts are more similar than distant districts. For this purpose, a neighbourhood has to be defined for each district. We assume that two districts are neighbours if they share a common border. If we consider a single district, and condition on only the neighbours with which it shares a border, this is a first-order autoregressive process, or intrinsic Gaussian Markov random field with density
+%
+\begin{equation}
+\label{eq:u_cond}
+\begin{split}
+    \prob(\vect{u} \given{\kappa_u}) &\propto \kappa_u^{(n-1)/2} \exp \left\{ -\frac{\kappa_u}{2} \sum_{i \sim j} (u_i - u_j)^2 \right\} \\
+    &= \kappa_u^{(n-1)/2} e^{-\kappa_u \trsp{\vect{u}} R \vect{u} / 2} \, ,
+\end{split}
+\end{equation}
+%
+i.e.
+%
+\begin{equation*}
+    \vect{u} \given{\kappa_u} \sim \N(\vect{0}, (\kappa_u R)^{-1}) \, .
+\end{equation*}
+%
+The sum in \eqref{eq:u_cond} goes over all pairs of neighbouring districts $i \sim j$ which is defined by the geographical map. The neighbourhood structure is consequently defined in the structure matrix $R$ where
+%
+\begin{equation*}
+    R_{ij} =
+    \begin{cases}
+    n_i, & i = j \\
+    -1, & i \sim j \\
+    0, & \text{otherwise}
+    \end{cases} \, .
+\end{equation*}
+%
+Here, $\eta_i$ denotes the number of neighbouring districts of district $i$. The distribution of $\vect{\eta}$, conditional on the spatial component $u$ and $\kappa_v$, is
+%
+\begin{equation*}
+    \vect{\eta} \given{\vect{u}, \kappa_v} \sim \N(\vect{u}, \kappa_v^{-1} I) \, .
+\end{equation*}
+%
+The precision terms $\kappa_u$ and $\kappa_v$ are assigned gamma prior distributions
+\begin{align*}
+    \kappa_u &\sim \G(\alpha_u, \beta_u) \, , \\
+    \kappa_v &\sim \G(\alpha_v, \beta_v) \, ,
+\end{align*}
+where $\G(\alpha, \beta)$ denotes the gamma density with shape parameter $\alpha$ and rate parameter $\beta$. Here, we will use $\alpha_u = \alpha_v = 1$ and $\beta_u = \beta_v = 0.01$.
