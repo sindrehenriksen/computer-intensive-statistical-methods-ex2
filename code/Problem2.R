@@ -1,7 +1,7 @@
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
-## ---- Libraries 
+
 library(spam)
 library(tidyverse)
 library(fields, warn.conflicts = FALSE)
@@ -9,14 +9,14 @@ source("./data/ex2_additionalFiles/dmvnorm.R")
 source("./data/ex2_additionalFiles/ess.R")
 library(colorspace)
 
-## ---- data_plot
+## ---- 2
+
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 str(Oral)
 attach(Oral)
 col <- diverge_hcl(8) # blue - red
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
-## ---- Input
 # a list of all the input variables to make code more readable
 input <- list(
   y = Oral$Y, 
@@ -38,7 +38,6 @@ get_c <- function(input,z){
 }
 
 
-## ---- r_kappa_u
 # Draw samples from the full condition of kappa_u
 r_kappa_u <- function(input,u){
   shape = (input$n-1)/2 + input$alpha
@@ -46,7 +45,7 @@ r_kappa_u <- function(input,u){
   return(rgamma(n = 1, shape = shape, rate = rate))
 }
 
-## ---- r_kappa_v
+
 # Draw samples from the full condition of kappa_v
 r_kappa_v <- function(input,eta,u){
   shape = input$n/2 + input$alpha
@@ -54,7 +53,7 @@ r_kappa_v <- function(input,eta,u){
   return(rgamma(n = 1 ,shape = shape, rate = rate))
 }
 
-## ---- r_u
+
 # draw samples from the full conditional of u
 r_u <- function(input,kappa_u,kappa_v,eta){
   Q = diag.spam(kappa_v, input$n) + kappa_u*input$R
@@ -63,7 +62,7 @@ r_u <- function(input,kappa_u,kappa_v,eta){
   return(u)
 }
 
-## ---- r_eta_prop
+
 # draw samples from the proposal density of eta
 r_eta_prop <- function(input,z,u,kappa_v){
   c_vec = get_c(input,z)
@@ -75,14 +74,14 @@ r_eta_prop <- function(input,z,u,kappa_v){
   return(list(sample=sample,prob=prob))
 }
 
-# ---- d_eta
+
 # finding the probability of eta
 d_eta <- function(input,eta,kappa_v,u){
   return(exp(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta + 
            t(eta)%*%(kappa_v*u) + t(eta)%*%input$y-t(exp(eta))%*%input$E))
 }
 
-# ---- acceptance_prob
+
 # calculating the acceptance probability
 acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
   accept_prob = min(1,d_eta(input,eta_prop$sample,kappa_v,u)*eta$prob/(eta_prop$prob*d_eta(input,eta$sample,kappa_v,u)))
@@ -90,7 +89,7 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 }
 
 
-# ---- MCMC
+
 M <- 50000
 burn_in <- round(M/5)
 myMCMC <- function(M,input){
