@@ -1,28 +1,23 @@
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
-# Use log densities
-# Libraries ------------------------------------
+## ---- Libraries 
 library(spam)
-library(ggplot2)
 library(tidyverse)
 library(fields, warn.conflicts = FALSE)
 source("./data/ex2_additionalFiles/dmvnorm.R")
 source("./data/ex2_additionalFiles/ess.R")
+library(colorspace)
+
+## ---- data_plot
+load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 str(Oral)
 attach(Oral)
-library(colorspace)
-library(MASS)
-library(mvtnorm)
 col <- diverge_hcl(8) # blue - red
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
-
-set.seed(123)
-# loading data
-load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
-
-
+## ---- Input
+# a list of all the input variables to make code more readable
 input <- list(
   y = Oral$Y, 
   E = Oral$E, 
@@ -32,32 +27,18 @@ input <- list(
   R = R
   )
 
+# getting the b-values
 get_b <- function(input,z){
   return(input$y+input$E*exp(z)*(z-1))
 }
 
+# getting the c values
 get_c <- function(input,z){
   return(input$E*exp(z))
 }
 
-d_eta <- function(input,eta,kappa_v,u){
-  return(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta + 
-           t(eta)%*%(kappa_v*u) + t(eta)%*%input$y-t(exp(eta))%*%input$E)
-}
 
-acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
-  accept <- exp(d_eta(input,eta_prop$sample,kappa_v,u) - 
-                  d_eta(input,eta$sample,kappa_v,u) -
-                  eta_prop$prob + 
-                  eta$prob)
-  if (accept > 1){
-    return(1)
-  }
-  return(accept)
-}
-
-
-## ---- 21
+## ---- r_kappa_u
 # Draw samples from the full condition of kappa_u
 r_kappa_u <- function(input,u){
   shape = (input$n-1)/2 + input$alpha
@@ -65,15 +46,15 @@ r_kappa_u <- function(input,u){
   return(rgamma(n = 1, shape = shape, rate = rate))
 }
 
-## ---- 22
+## ---- r_kappa_v
 # Draw samples from the full condition of kappa_v
 r_kappa_v <- function(input,eta,u){
   shape = input$n/2 + input$alpha
-  rate = 1/2 * (t(eta - u)) %*% (eta - u) + input$beta
+  rate = 1/2 * t(eta - u) %*% (eta - u) + input$beta
   return(rgamma(n = 1 ,shape = shape, rate = rate))
 }
 
-## ---- 23
+## ---- r_u
 # draw samples from the full conditional of u
 r_u <- function(input,kappa_u,kappa_v,eta){
   Q = diag.spam(kappa_v, input$n) + kappa_u*input$R
@@ -82,7 +63,7 @@ r_u <- function(input,kappa_u,kappa_v,eta){
   return(u)
 }
 
-## ---- 24
+## ---- r_eta_prop
 # draw samples from the proposal density of eta
 r_eta_prop <- function(input,z,u,kappa_v){
   c_vec = get_c(input,z)
@@ -90,18 +71,35 @@ r_eta_prop <- function(input,z,u,kappa_v){
   b = kappa_v*u + b_vec
   Q = diag.spam(kappa_v, input$n) + diag.spam(c_vec)
   sample = c(rmvnorm.canonical(n = 1, b = b, Q = Q))
-  prob = dmvnorm.canonical(x = sample, b = b, Q = Q, log = TRUE)
+  prob = dmvnorm.canonical(x = sample, b = b, Q = Q)
   return(list(sample=sample,prob=prob))
 }
 
-## ---- 25
-# acceptance of proposal eta
-M = 2000
+# ---- d_eta
+# finding the probability of eta
+d_eta <- function(input,eta,kappa_v,u){
+  return(exp(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta + 
+           t(eta)%*%(kappa_v*u) + t(eta)%*%input$y-t(exp(eta))%*%input$E))
+}
+
+# ---- acceptance_prob
+# calculating the acceptance probability
+acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
+  accept_prob = min(1,d_eta(input,eta_prop$sample,kappa_v,u)*eta$prob/(eta_prop$prob*d_eta(input,eta$sample,kappa_v,u)))
+  return(accept_prob)
+}
+
+
+# ---- MCMC
+M <- 50000
+burn_in <- round(M/5)
 myMCMC <- function(M,input){
   pb <- txtProgressBar(min = 0, max = M, style = 3)
+  # choosing kappa from the prior
   kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
   kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-  u <- c(rep_len(0.0, input$n))
+  # choosing u around the mean
+  u = c(rep_len(0.0, input$n))
   eta <- r_eta_prop(input,u,u,kappa_v)
   eta_samples <- matrix(NA,nrow=M,ncol=input$n)
   u_samples <- matrix(NA,nrow=M,ncol=input$n)
@@ -125,11 +123,11 @@ myMCMC <- function(M,input){
     kappa_u_samples = c(kappa_u_samples,kappa_u)
     kappa_v_samples = c(kappa_v_samples,kappa_v)
   }
-  vs <- eta_samples - u_samples
-  samples <- tibble(
+  v_samples <- eta_samples - u_samples
+  samples <- data.frame(
     steps = steps,
     eta = eta_samples[,1],
-    v = vs[,1],
+    v = v_samples[,1],
     u1 = u_samples[,1],
     u2 = u_samples[,2],
     kappa_u = kappa_u_samples,
@@ -137,6 +135,8 @@ myMCMC <- function(M,input){
   )
   return(samples)
 }
+
+## ---- plot
 samples <- myMCMC(M,input)
 ggplot(samples,aes(x = steps)) +
   geom_line(aes(y = v))
@@ -151,6 +151,9 @@ ggplot(samples,aes(x = steps)) +
 ggplot(samples,aes(x = steps)) +
   geom_line(aes(y = eta))
 
+ggsave("../figures/posteriorSamps.pdf", plot = plotGrid, device = NULL, path = NULL,
+       scale = 1, width = 5.5, height = 2*4, units = "in",
+       dpi = 300, limitsize = TRUE)
 
 acf(samples$kappa_u)
 acf(samples$kappa_v)
