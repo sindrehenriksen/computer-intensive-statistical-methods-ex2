@@ -12,10 +12,13 @@ library(gridExtra)
 ## ---- 2
 
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
+str(Oral)
 attach(Oral)
 col <- diverge_hcl(8) # blue - red
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
 
+
+## ---- Start_code
 # a list of all the input variables to make code more readable
 input <- list(
   y = Oral$Y, 
@@ -35,6 +38,9 @@ get_b <- function(input,z){
 get_c <- function(input,z){
   return(input$E*exp(z))
 }
+
+
+## ---- functions
 
 
 # Draw samples from the full condition of kappa_u
@@ -95,45 +101,57 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 # running a MCMC
 M <- 70000
 burnin <- 10000
-pb <- txtProgressBar(min = 0, max = M, style = 3)
-# choosing kappa from the prior
-kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-# choosing u around the mean
-u = c(rep_len(0.0, input$n))
-eta <- r_eta_prop(input,u,u,kappa_v)
-eta_samples <- matrix(NA,nrow=M,ncol=input$n)
-u_samples <- matrix(NA,nrow=M,ncol=input$n)
-kappa_u_samples <- vector()
-kappa_v_samples <- vector()
-for (i in seq(1,M)){
-  setTxtProgressBar(pb, i)
-  kappa_u = r_kappa_u(input,u)
-  kappa_v = r_kappa_v(input,eta$sample,u)
-  u = r_u(input,kappa_u,kappa_v,eta$sample)
-  eta_prop = r_eta_prop(input,eta$sample,u,kappa_v)
-  accept_prob <- acceptance_prob(input,eta_prop,eta,kappa_v,u)
-  if(runif(1) < accept_prob){
-    eta = eta_prop
+myMCMC <- function(input, M){
+  pb <- txtProgressBar(min = 0, max = M, style = 3)
+  # choosing kappa from the prior
+  kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+  kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
+  # choosing u around the mean
+  u = c(rep_len(0.0, input$n))
+  eta <- r_eta_prop(input,u,u,kappa_v)
+  eta_samples <- matrix(NA,nrow=M,ncol=input$n)
+  u_samples <- matrix(NA,nrow=M,ncol=input$n)
+  kappa_u_samples <- vector()
+  kappa_v_samples <- vector()
+  accept_vec <- vector()
+  for (i in seq(1,M)){
+    setTxtProgressBar(pb, i)
+    kappa_u = r_kappa_u(input,u)
+    kappa_v = r_kappa_v(input,eta$sample,u)
+    u = r_u(input,kappa_u,kappa_v,eta$sample)
+    eta_prop = r_eta_prop(input,eta$sample,u,kappa_v)
+    accept_vec <- c(accept_vec, acceptance_prob(input,eta_prop,eta,kappa_v,u))
+    if(runif(1) < accept_vec[i]){
+      eta = eta_prop
+    }
+    eta_samples[i,] = eta$sample
+    u_samples[i,] = u
+    kappa_u_samples = c(kappa_u_samples,kappa_u)
+    kappa_v_samples = c(kappa_v_samples,kappa_v)
   }
-  eta_samples[i,] = eta$sample
-  u_samples[i,] = u
-  kappa_u_samples = c(kappa_u_samples,kappa_u)
-  kappa_v_samples = c(kappa_v_samples,kappa_v)
+  return(list(
+    eta = eta_samples,
+    u = u_samples,
+    accept_prob <- accept_vec,
+    kappa_u = kappa_u_samples,
+    kappa_v = kappa_v_samples
+  ))
 }
+
+system.time(sample <- myMCMC(input, M))
 
 v <- data.frame(
   steps = seq(1:M),
-  v1 = eta_samples[,1] - u_samples[,1],
-  v2 = eta_samples[,242] - u_samples[,242],
-  v3 = eta_samples[,493] - u_samples[,493]
+  v1 = eta[,1] - u[,1],
+  v2 = eta[,242] - u[,242],
+  v3 = eta[,493] - u[,493]
 )
 
 u <- data.frame(
   steps = seq(1:M),
-  u1 = u_samples[,1],
-  u2 = u_samples[,242],
-  u3 = u_samples[,493]
+  u1 = u[,1],
+  u2 = u[,242],
+  u3 = u[,493]
 )
 
 kappa <- data.frame(
