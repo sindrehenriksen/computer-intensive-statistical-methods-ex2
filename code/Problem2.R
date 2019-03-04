@@ -8,7 +8,6 @@ library(fields, warn.conflicts = FALSE)
 source("./data/ex2_additionalFiles/dmvnorm.R")
 library(colorspace)
 library(ggpubr)
-library(gridExtra)
 ## ---- 2
 
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
@@ -41,8 +40,6 @@ get_c <- function(input,z){
 
 
 ## ---- functions
-
-
 # Draw samples from the full condition of kappa_u
 r_kappa_u <- function(input,u){
   shape = (input$n-1)/2 + input$alpha
@@ -100,7 +97,6 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 
 # running a MCMC
 M <- 70000
-burnin <- 10000
 myMCMC <- function(input, M){
   pb <- txtProgressBar(min = 0, max = M, style = 3)
   # choosing kappa from the prior
@@ -138,70 +134,6 @@ myMCMC <- function(input, M){
   ))
 }
 
-system.time(sample <- myMCMC(input, M))
-
-v <- data.frame(
-  steps = seq(1:M),
-  v1 = eta[,1] - u[,1],
-  v2 = eta[,242] - u[,242],
-  v3 = eta[,493] - u[,493]
-)
-
-u <- data.frame(
-  steps = seq(1:M),
-  u1 = u[,1],
-  u2 = u[,242],
-  u3 = u[,493]
-)
-
-kappa <- data.frame(
-  steps = seq(1,M),
-  kappa_u = kappa_u_samples,
-  kappa_v = kappa_v_samples
-)
-
-# Plotting v samples
-grid.arrange(
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = v1, colour = "slateblue")),
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = v2, colour = "deeppink")),
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = v3, colour = "grey41")),
-  nrow = 3,
-  ncol = 1
-  )
-
-# Plotting u samples
-ggarrange(
-  ggplot(u, aes(x = steps)) + 
-    geom_line(aes(y = u1)),
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = u2)),
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = u3))
-)
-
-
-# Plotting Kappas
-ggarrange(
-  ggplot(kappa, aes(x = steps)) + 
-    geom_line(aes(y = kappa_u)),
-  ggplot(v, aes(x = steps)) + 
-    geom_line(aes(y = kappa_v))
-)
-
-# test MCMC
-eta <- data.frame(
-  steps = seq(burnin:M),
-  sam = eta_samples[burnin:M,1]
-)
-ggplot(eta, aes(x = steps)) + 
-  geom_line(aes(y = sam))
-
-acf(eta$sam)
-# --- 
-  
-ggsave("../figures/posteriorSamps.pdf", plot = plotGrid, device = NULL, path = NULL,
-       scale = 1, width = 5.5, height = 2*4, units = "in",
-       dpi = 300, limitsize = TRUE)
+system.time(samples <- myMCMC(input, M))
+save(samples,file = "samples.Rdata")
+save(input,file ="input.Rdata")
