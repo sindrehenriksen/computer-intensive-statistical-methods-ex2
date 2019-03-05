@@ -1,4 +1,4 @@
-#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 # Libraries
@@ -29,7 +29,7 @@ formula = Y ~
 data = list(Y=Y, E=E, region_struct=region, region_random=region)
 result_a = inla(formula, family="poisson", data=data, E=E,
                 control.compute=list(dic=TRUE))
-summary(result_a)
+summary_a = summary(result_a)
 
 # Improve estimates of the posterior marginals
 result_a = inla.hyperpar(result_a)
@@ -52,22 +52,23 @@ formula_b_lin = Y ~
   smoking
 result_b_lin = inla(formula_b_lin, family="poisson", data=data, E=E,
                     control.compute=list(dic=TRUE))
-summary(result_b_lin)
+summary_b_lin = summary(result_b_lin)
 
 # Define formula and run INLA with smoking as non-linear effect (rw2)
 formula_b_rw2 = Y ~
   -1 +
   f(region_struct, model="besag", graph.file=g, constr=FALSE, hyper=hyper) +
   f(region_random, model="iid", hyper=hyper) +
-  finla. model="rw2")
+  f(smoking, model="rw2")
 result_b_rw2 = inla(formula_b_rw2, family="poisson", data=data, E=E,
                     control.compute=list(dic=TRUE))
-summary(result_b_rw2)
+summary_b_rw2 = summary(result_b_rw2)
 
 # Get DIC for all the models
 smoking_none_DIC = result_a$dic$dic
 smoking_lin_DIC = result_b_lin$dic$dic
 smoking_rw2_DIC = result_b_rw2$dic$dic
-print(smoking_none_DIC)
-print(smoking_lin_DIC)
-print(smoking_rw2_DIC)
+
+## ---- p6_save
+save(list=c("summary_a", "summary_b_lin", "summary_b_rw2"),
+     file="R_objects/p6.R")
