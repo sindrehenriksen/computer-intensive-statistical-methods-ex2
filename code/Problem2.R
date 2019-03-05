@@ -134,6 +134,6 @@ myMCMC <- function(input, M){
   ))
 }
 
-system.time(samples <- myMCMC(input, M))
-save(samples,file = "samples.Rdata")
-save(input,file ="input.Rdata")
+run_time <- system.time(samples <- myMCMC(input, M))
+save(samples,file = "data/samples.Rdata")
+save(input,file ="data/input.Rdata")
