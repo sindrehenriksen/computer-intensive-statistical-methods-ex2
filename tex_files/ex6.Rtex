@@ -1,0 +1,16 @@
+\section{}
+\label{sec:ex6}
+
+<<echo=FALSE>>=
+library(INLA)
+load("../code/R_objects/p6.R")
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+bla bla bla
+%
+<<>>=
+print(summary_a)
+@
+%
