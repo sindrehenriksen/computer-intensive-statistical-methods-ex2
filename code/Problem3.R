@@ -9,6 +9,7 @@ library(ggpubr)
 load("data/input.Rdata")
 load("data/samples.Rdata")
 # Using a burning 
+# ---- dfCreate
 r_cols <- sample(1:input$n,3,replace = F)
 M <- length(samples$eta[,1])
 burnin = 5000
@@ -33,12 +34,11 @@ kappa <- data.frame(
   kappa_v = samples$kappa_v[steps]
 )
 
-MCMC_list <- data.frame(v[],u[,-1],kappa[,-1])
+MCMC_list <- data.frame(v,u[,-1],kappa[,-1])
 
 ## ---- 3a
 # trace plots
 ## ---- tracev
-burnin_step = seq(burnin,M)
 fig_v <- ggarrange(
   ggplot(v, aes(x = steps, y = v1)) + 
     geom_line(colour = "slateblue"),

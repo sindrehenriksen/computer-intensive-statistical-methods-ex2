@@ -13,9 +13,6 @@ library(ggpubr)
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 str(Oral)
 attach(Oral)
-col <- diverge_hcl(8) # blue - red
-germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE)
-
 
 ## ---- Start_code
 # a list of all the input variables to make code more readable
@@ -70,28 +67,36 @@ r_eta_prop <- function(input,z,u,kappa_v){
   b_vec = get_b(input,z)
   b = kappa_v*u + b_vec
   Q = diag.spam(kappa_v, input$n) + diag.spam(c_vec)
-  sample = c(rmvnorm.canonical(n = 1, b = b, Q = Q))
-  prob = dmvnorm.canonical(x = sample, b = b, Q = Q,log = TRUE)
-  return(list(sample=sample,prob=prob))
+  return(c(rmvnorm.canonical(n = 1, b = b, Q = Q)))
 }
 
 
-# finding the probability of eta
-d_eta <- function(input,eta,kappa_v,u){
+# finding the probability of eta from the
+# full condition p(eta|...)
+d_eta_p <- function(input,eta,kappa_v,u){
   return(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta + 
            t(eta)%*%(kappa_v*u) + 
            t(eta)%*%input$y - 
            t(exp(eta))%*%input$E)
 }
 
+# finding the probability of eta from the
+# estimated full condition q(eta|...)
+d_eta_q <- function(input,eta,z,kappa_v,u){
+  c_vec = get_c(input,z)
+  b_vec = get_b(input,z)
+  b = kappa_v*u + b_vec
+  Q = diag.spam(kappa_v,input$n) + diag.spam(c_vec)
+  return(dmvnorm.canonical(x = eta, b = b, Q = Q, log = TRUE))
+}
 
 # calculating the acceptance probability
 acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
   return(min(1,exp(
-    d_eta(input,eta_prop$sample,kappa_v,u) + 
-      r_eta_prop(input,eta_prop$sample,u,kappa_v)$prob - 
-      eta_prop$prob - 
-      d_eta(input,eta$sample,kappa_v,u))))
+      d_eta_p(input, eta_prop, kappa_v, u) + 
+      d_eta_q(input, eta, eta_prop, kappa_v, u) - 
+      d_eta_p(input, eta, kappa_v, u) - 
+      d_eta_q(input, eta_prop, eta, kappa_v, u))))
 }
 
 
@@ -113,14 +118,14 @@ myMCMC <- function(input, M){
   for (i in seq(1,M)){
     setTxtProgressBar(pb, i)
     kappa_u = r_kappa_u(input,u)
-    kappa_v = r_kappa_v(input,eta$sample,u)
-    u = r_u(input,kappa_u,kappa_v,eta$sample)
-    eta_prop = r_eta_prop(input,eta$sample,u,kappa_v)
+    kappa_v = r_kappa_v(input,eta,u)
+    u = r_u(input,kappa_u,kappa_v,eta)
+    eta_prop = r_eta_prop(input,eta,u,kappa_v)
     accept_vec <- c(accept_vec, acceptance_prob(input,eta_prop,eta,kappa_v,u))
     if(runif(1) < accept_vec[i]){
       eta = eta_prop
     }
-    eta_samples[i,] = eta$sample
+    eta_samples[i,] = eta
     u_samples[i,] = u
     kappa_u_samples = c(kappa_u_samples,kappa_u)
     kappa_v_samples = c(kappa_v_samples,kappa_v)
@@ -135,5 +140,6 @@ myMCMC <- function(input, M){
 }
 
 run_time <- system.time(samples <- myMCMC(input, M))
+samples$run_time = run_time
 save(samples,file = "data/samples.Rdata")
 save(input,file ="data/input.Rdata")
