@@ -73,15 +73,17 @@ and
 %
 Thus $\kappa_u$ and $\kappa_v$ are Gamma distributed with parameters given in the following:
 %
-\begin{equation*}
+\begin{equation}
     \kappa_u \given{\vect{u}} \sim \G \left(\frac{n-1}{2} + \alpha_u, \frac{1}{2} \trsp{\vect{u}} \matr{R} \vect{u} + \beta_u \right)
-\end{equation*}
+    \label{eq:fc_kappa_u}
+\end{equation}
 %
 and
 %
-\begin{equation*}
+\begin{equation}
     \kappa_v \given{\vect{\eta}, \vect{u}} \sim \G \left(\frac{n}{2} + \alpha_v, \frac{1}{2}\trsp{(\vect{\eta}-\vect{u})}(\vect{\eta}-\vect{u}) + \beta_v \right) \, .
-\end{equation*}
+    \label{eq:fc_kappa_v}
+\end{equation}
 %
 The full conditional posterior density $\prob(\vect{u} \given{\vect{y}, \vect{\eta}, \kappa_u, \kappa_v})$ is given by
 %
