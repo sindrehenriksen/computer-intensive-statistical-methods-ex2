@@ -6,10 +6,9 @@ library(spam)
 library(tidyverse)
 library(fields, warn.conflicts = FALSE)
 source("./data/ex2_additionalFiles/dmvnorm.R")
-library(colorspace)
 library(ggpubr)
 
-## ---- data2a
+## ---- data2
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 str(Oral)
 attach(Oral)
@@ -138,7 +137,7 @@ myMCMC <- function(input, M){
   ))
 }
 
-## ---- save2a
+## ---- save2
 run_time <- system.time(samples <- myMCMC(input, M))
 samples$run_time = run_time
 save(samples,file = "data/samples.Rdata")
