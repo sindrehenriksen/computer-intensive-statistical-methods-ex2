@@ -67,13 +67,13 @@ If the proposal is accepted $\vect{\eta}^{(m)} = \vect{\eta}^*$, and if not $\ve
 <<acceptance_prob, eval=FALSE>>=
 @
 %
-All the components is implement we can now create the MCMC algorithm.
+All the components is implement we can now create the MCMC-algorithm.
 The initial conditions for $\kappa_u$ and $\kappa_v$ is drawn from their prior distributions $\kappa_u \sim \G{\alpha_u,\beta_u}$ and $\kappa_v \sim \G(\alpha_v,\beta_v)$, using the R function \texttt{rgamma}. The initial condition $\vect{u} = \vect{0}$  is used to sample the initial proposal. To accept or reject a proposal $\vect{\eta}^*$, we draw from $x \sim \U[0,1]$, and accept if the $x \leq \vect{\eta}^*$. The function \texttt{myMCMC} returns a list containing $\vect{\eta}$-, $\vect{u}$-, $kappa_u$- and $kappa_v$-samples and a vector of acceptance probabilities.
 %
 <<myMCMC, eval=FALSE>>=
 @
 %
-To get the running time of our MCMC algorithm we used the R function \texttt{system.time} on the function call and stored this in the list \textit{samples} returned from the \texttt{myMCMC} function. The list is then saved along with the \textit{input}-list declaired above to save computation time in later exercises.
+To get the running time of our MCMC-algorithm we used the R function \texttt{system.time} on the function call and stored this in the list \textit{samples} returned from the \texttt{myMCMC} function. The list is then saved along with the \textit{input}-list declared above to save computation time in later exercises.
 
 %
 <<res2, eval=FALSE>>=
