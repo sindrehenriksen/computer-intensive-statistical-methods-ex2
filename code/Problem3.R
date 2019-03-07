@@ -3,57 +3,81 @@ rm(list = ls())
 
 # this is the solution to excercise 3
 # it contains mostly plotting of data from excercise 2
-## ---- labs3
+## ---- libs3
 library(tidyverse)
 library(spam)
 library(ggpubr)
+set.seed(123)
 load("data/input.Rdata")
 load("data/samples.Rdata")
 # Using a burning 
 # ---- dfCreate
-r_cols <- sample(1:input$n,3,replace = F)
+r_cols <- sort(sample(1:input$n,3,replace = F))
 M <- length(samples$eta[,1])
 burnin = 5000
-steps <- seq(burnin,M)
+steps <- seq(1,M)
+burnin_step = seq(burnin,M)
 v <- data.frame(
   steps = steps,
   v1 = samples$eta[steps,r_cols[1]] - samples$u[steps,r_cols[1]],
   v2 = samples$eta[steps,r_cols[2]] - samples$u[steps,r_cols[2]],
-  v3 = samples$eta[steps,r_cols[3]] - samples$u[steps,r_cols[3]]
+  v3 = samples$eta[steps,r_cols[3]] - samples$u[steps,r_cols[3]],
+  is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin))
 )
 
 u <- data.frame(
   steps = steps,
   u1 = samples$u[steps,r_cols[1]],
   u2 = samples$u[steps,r_cols[2]],
-  u3 = samples$u[steps,r_cols[3]]
+  u3 = samples$u[steps,r_cols[3]],
+  is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin))
 )
 
 kappa <- data.frame(
   steps = steps,
   kappa_u = samples$kappa_u[steps],
-  kappa_v = samples$kappa_v[steps]
+  kappa_v = samples$kappa_v[steps],
+  is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin))
 )
 
 MCMC_list <- data.frame(v,u[,-1],kappa[,-1])
-
 ## ---- 3a
 # trace plots
 ## ---- tracev
 fig_v <- ggarrange(
-  ggplot(v, aes(x = steps, y = v1)) + 
-    geom_line(colour = "slateblue"),
-  ggplot(v, aes(x = steps,y = v2)) + 
-    geom_line(colour = "deeppink"),
-  ggplot(v, aes(x = steps, y = v3)) + 
-    geom_line(colour = "grey41"),
+  ggplot(v, aes(x = steps, y = v1, color = is_burnin)) + 
+    geom_line()+
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
+  ggplot(v, aes(x = steps, y = v2, color = is_burnin)) +
+    geom_line()+
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
+  ggplot(v, aes(x = steps, y = v3, color = is_burnin)) + 
+    geom_line()+
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
   nrow = 3,
   ncol = 1,
-  labels = c(sprintf("m = %d",r_cols[1]), sprintf("m = %d",r_cols[2]), sprintf("m = %d",r_cols[3]))
+  common.legend = TRUE,
+  legend = "bottom",
+  labels = c(sprintf("m = %d",r_cols[1]), sprintf("m = %d",r_cols[2]), sprintf("m = %d",r_cols[3])),
+  label.x = 0,
+  label.y = 1,
+  hjust= -1.7,
+  vjust = 1.9
 )
 fig_v <- annotate_figure(fig_v,
-                top = text_grob("Traceplot of v", color = "black", face = "bold", size = 14),
-                fig.lab = "trace_v", fig.lab.face = "bold"
+                top = text_grob("Traceplot of v", color = "black", face = "bold", size = 14)
 )
 fig_v
 ## ---- break
@@ -131,7 +155,6 @@ fig_v_acf <- ggarrange(
   label.y = 1,
   hjust= -0.5,
   vjust = 3
-  
 )
 fig_v_acf <- annotate_figure(fig_v_acf,
                              fig.lab = "acf_v", fig.lab.face = "bold"
