@@ -4,11 +4,21 @@ read_chunk("../code/Problem2.R")
 \section{}
 \label{sec:ex2}
 
-From the formulations in exercise 1, a MCMC sampler can be implemented. The data used in this work is the '\textit{Oral}' dataset.  The libraries we used was
+From the formulations in exercise 1, a MCMC sampler can be implemented. The data used in this work is the '\textit{Oral}' dataset.  The libraries used in exercise 2 is
 %
-<<C2, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+<<libs2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
 @
-
+%
+Next we import the data and create a list \textit{input}, which is used in all of the functions in this exercise. It contains $\alpha$ and $\beta$ for the prior distribution for $\kappa_u$ and $\kappa_v$, the neighbourhood structure $R$, observed counts $y$ and expected counts $E$.
+%
+<<data2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+@
+%
+Then we are ready to start implementing samplers for the full conditionals.
+First we look at the full conditional of $\kappa_u$, given by $p(\kappa_u\given\vect{y}, \kappa_v^{(m-1)},\vect{\eta}^{(m-1)}, \vect{u}^{(m-1)})$. The distribution can be found in Equation \eqref{eq:fc_kappa_u} and is implemented in the function \texttt{r\_kappa\_u}.
+%
+<<r_kappa_u, eval=FALSE>>=
+@
 %
 %<<echo=FALSE>>=
 %str(Oral)
