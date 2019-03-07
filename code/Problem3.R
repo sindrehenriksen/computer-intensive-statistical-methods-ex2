@@ -3,6 +3,7 @@ rm(list = ls())
 
 # this is the solution to excercise 3
 # it contains mostly plotting of data from excercise 2
+## ---- labs3
 library(tidyverse)
 library(spam)
 library(ggpubr)
@@ -55,6 +56,7 @@ fig_v <- annotate_figure(fig_v,
                 fig.lab = "trace_v", fig.lab.face = "bold"
 )
 fig_v
+## ---- break
 ggsave("../figures/trace_v.pdf", plot = fig_v, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
@@ -76,6 +78,7 @@ fig_u <- annotate_figure(fig_u,
                 fig.lab = "trace_u", fig.lab.face = "bold"
 )
 fig_u
+## ---- break
 ggsave("../figures/trace_u.pdf", plot = fig_u, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
@@ -95,6 +98,7 @@ fig_kappa <- annotate_figure(fig_kappa,
                          fig.lab = "trace_kappa", fig.lab.face = "bold"
 )
 fig_kappa
+## ---- break
 ggsave("../figures/trace_kappa.pdf", plot = fig_kappa, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
@@ -133,6 +137,7 @@ fig_v_acf <- annotate_figure(fig_v_acf,
                              fig.lab = "acf_v", fig.lab.face = "bold"
 )
 fig_v_acf
+## ---- break
 ggsave("../figures/acf_v.pdf", plot = fig_v_acf, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
@@ -144,7 +149,6 @@ u_acf <- data.frame(
   u2 = acf(u$u2,plot = F)$acf, 
   u3 = acf(u$u3,plot = F)$acf
 )
-
 
 fig_u_acf <- ggarrange(
   ggplot(u_acf,aes(x = lag, y = u1)) + 
@@ -169,6 +173,7 @@ fig_u_acf <- annotate_figure(fig_u_acf,
                              fig.lab = "acf_u", fig.lab.face = "bold"
 )
 fig_u_acf
+## ---- break
 ggsave("../figures/acf_u.pdf", plot = fig_u_acf, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
@@ -193,6 +198,7 @@ fig_kappa_acf <- ggarrange(
   ncol = 1
 )
 fig_kappa_acf
+## ---- break
 ggsave("../figures/acf_kappa.pdf", plot = fig_u_acf, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
