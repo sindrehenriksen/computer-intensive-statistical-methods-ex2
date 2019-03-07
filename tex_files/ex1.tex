@@ -96,9 +96,10 @@ The full conditional posterior density $\prob(\vect{u} \given{\vect{y}, \vect{\e
 %
 This is the canonical form of a normal distribution with parameters given in the following:
 %
-\begin{equation*}
+\begin{equation}
     \vect{u} \given{\vect{\eta}, \kappa_u, \kappa_v} \sim \N ((\kappa_v \matr{I} + \kappa_u \matr{R})^{-1} \kappa_v \vect{\eta}, (\kappa_v \matr{I} + \kappa_u \matr{R})^{-1}) \, .
-\end{equation*}
+    \label{eq:fc_u}
+\end{equation}
 %
 Finally, the full conditional posterior density $\prob (\vect{\eta} \given{\vect{y}, \vect{u}, \kappa_u, \kappa_v})$ is given by
 %
