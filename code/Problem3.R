@@ -40,7 +40,7 @@ kappa <- data.frame(
   is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin))
 )
 
-MCMC_list <- data.frame(v,u[,-1],kappa[,-1])
+MCMC_list <- data.frame(v[,1:4],u[,2:4],kappa[,2:4])
 ## ---- 3a
 # trace plots
 ## ---- tracev
@@ -87,19 +87,33 @@ ggsave("../figures/trace_v.pdf", plot = fig_v, device = NULL, path = NULL,
 
 ## ---- traceu
 fig_u <- ggarrange(
-  ggplot(u, aes(x = steps, y = u1)) + 
-    geom_line(colour = "slateblue"),
-  ggplot(u, aes(x = steps,y = u2)) + 
-    geom_line(colour = "deeppink"),
-  ggplot(u, aes(x = steps, y = u3)) + 
-    geom_line(colour = "grey41"),
+  ggplot(u, aes(x = steps, y = u1, color = is_burnin)) + 
+    geom_line() +
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
+  ggplot(u, aes(x = steps, y = u2, color = is_burnin)) + 
+    geom_line() + 
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
+  ggplot(u, aes(x = steps, y = u3, color = is_burnin)) + 
+    geom_line() + 
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
   nrow = 3,
   ncol = 1,
   labels = c(sprintf("m = %d",r_cols[1]), sprintf("m = %d",r_cols[2]), sprintf("m = %d",r_cols[3]))
 )
 fig_u <- annotate_figure(fig_u,
-                top = text_grob("Traceplot of u", color = "black", face = "bold", size = 14),
-                fig.lab = "trace_u", fig.lab.face = "bold"
+                top = text_grob("Traceplot of u", color = "black", face = "bold", size = 14)
 )
 fig_u
 ## ---- break
@@ -109,10 +123,20 @@ ggsave("../figures/trace_u.pdf", plot = fig_u, device = NULL, path = NULL,
 
 ## ---- tracekappa
 fig_kappa <- ggarrange(
-  ggplot(kappa, aes(x = steps,y = kappa_u)) + 
-    geom_line(colour = "slateblue"),
-  ggplot(kappa, aes(x = steps, y = kappa_v)) + 
-    geom_line(colour = "deeppink"),
+  ggplot(kappa, aes(x = steps,y = kappa_u, color = is_burnin)) + 
+    geom_line() +
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
+  ggplot(kappa, aes(x = steps, y = kappa_v, color = is_burnin)) + 
+    geom_line() + 
+    geom_vline(xintercept = burnin, color="firebrick1")+
+    scale_color_manual(
+      name = "",
+      labels = c("samples","burnin"),
+      values = c("grey24","grey47")),
   nrow = 2,
   ncol = 1,
   labels = c("kappa_u", "kappa_v")
