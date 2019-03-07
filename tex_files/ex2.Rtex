@@ -3,13 +3,14 @@ read_chunk("../code/Problem2.R")
 @
 \section{}
 \label{sec:ex2}
-
+\todo[inline]{Comment on the utilization of sparse matrices}
+\todo[inline]{Display the functions b\_vec and c\_vec}
 From the formulations in exercise 1, a MCMC sampler can be implemented. The data used in this work is the '\textit{Oral}' dataset.  The libraries used in exercise 2 is
 %
 <<libs2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
 @
 %
-Next we import the data and create a list \textit{input}, which is used in all of the functions in this exercise. It contains $\alpha$ and $\beta$ for the prior distribution for $\kappa_u$ and $\kappa_v$, the neighbourhood structure $R$, observed counts $y$ and expected counts $E$.
+Next we import the data and create a list \textit{input}, which is used in all of the functions in this exercise. It contains $\alpha$ and $\beta$ for the prior and full conditional posterior distribution for $\kappa_u$ and $\kappa_v$, the neighbourhood structure $\matr{R}$, observed counts $\vect{y}$ and expected counts $\vect{E}$.
 %
 <<data2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
 @
@@ -20,63 +21,61 @@ First we look at the full conditional of $\kappa_u$, given by $p(\kappa_u\given\
 <<r_kappa_u, eval=FALSE>>=
 @
 %
-%<<echo=FALSE>>=
-%str(Oral)
-%attach(Oral)
-%@
-%%
-%The neighbourhood structure $\matr{R}$ is stored in the file 
-%\textit{'tma4300\_ex2\_Rmatrix.Rdata'}.
-%%
-%<<echo=FALSE>>=
-%load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
-%@
-%%
-%In the implementation we have created a list object, \textit{'input'}, that consists %of constants and the data from \textit{'Oral'}. It is used in function input in the %simulation. 
-%%
-%<<echo=FALSE>>=
-%problem = list(
-%  y = Oral$Y,
-%  E = Oral$E,
-%  n = length(Oral$Y),
-%  R = R,
-%  alpha_u = 1,
-%  alpha_v = 1,
-%  beta_u = 0.01,
-%  beta_v = 0.01
-%)
-%@
+The full conditional of $kappa_v$, given by $p(\kappa_v\given\vect{y}, \kappa_u^{m},\vect{\eta}^{(m-1)}, \vect{u}^{(m-1)})$, which has the distribution given in Equation \eqref{eq:fc_kappa_v}. The samples of $\kappa_v$ is generated in the function \texttt{r\_kappa\_v}.
+%
+<<r_kappa_v, eval=FALSE>>=
+@
+%
+To draw samples from of $\vect{u}$ we use the the distribution of the full conditional, $p(\vect{u}\given\vect{y}, \kappa_u^{(m)}, \kappa_v^{(m)},\vect{\eta}^{(m-1)})$, given in Equation \eqref{eq:fc_u}. The sampler is implemented in \texttt{r\_u}.
+%
+<<r_u, eval=FALSE>>=
+@
+%
+The proposal samples $\vect{\eta}^*$ is drawn from the approximation of the posterior full conditional for $\eta$ found in Equation \eqref{eq:eta_fc_approx}. In the proposal density $q(\vect{\eta}^* \given\vect{z},\vect{y},\vect{u}^{(m)},\kappa_u^{(m)},\kappa_v^{(m)})$ we used the approximation around $\vect{z} = \vect{\eta}^{(m-1)}$. From this we implemented the function,  \texttt{r\_eta\_prop}, which generates a proposal sample. \todo{comment on the use of metropolitan-hastings}
+%
+<<r_eta_prop, eval=FALSE>>=
+@
+%
+Whether or not the proposal $\vect{\eta}^*$ is accepted or not, is determined by the acceptance probability,
+
+\begin{equation*}
+    \alpha = \min\left(1,
+        \frac{
+            p(\vect{\eta}^*\given\vect{y},\kappa_v^{(m)},\kappa_u^{(m)},\vect{u}^{(m)})
+        }{
+            p(\vect{\eta}^{(m-1)}\given\vect{y},\kappa_v^{(m)},\kappa_u^{(m)},\vect{u}^{(m)})
+        }
+        \frac{
+            q(\vect{\eta}^{(m-1)}\given\vect{\eta}^*, \vect{y}, \vect{u}^{(m)}, \kappa_u^{(m)}, \kappa_v^{(m)})
+        }{
+            q(\vect{\eta}^*\given\vect{\eta}^{(m-1)},\vect{y},\vect{u}^{(m)}, \kappa_u^{(m)}, \kappa_v^{(m)})
+        }
+    \right).
+    \label{eq:accept_prob}
+\end{equation*}
+If the proposal is accepted $\vect{\eta}^{(m)} = \vect{\eta}^*$, and if not $\vect{\eta}^{(m)} = \vect{\eta}^{(m-1)}$. To help with the calculation of the acceptance probability we created two function, \texttt{d\_eta\_p} and \texttt{d\_eta\_q}, that returns p-values of the posterior density $p(\eta\given...)$ and the proposal density $q(\eta\given....)$. All these probability calculations are done in log scale.
+%
+<<d_eta_p, eval=FALSE>>=
+@
+%
+\vspace{5em}
+%
+<<d_eta_q, eval=FALSE>>=
+@
 %
 %
-%<<r_kappa_u, eval=FALSE>>=
-%@
-%%
-%%
-%<<r_kappa_v, eval=FALSE>>=
-%@
-%%
-%%
-%<<r_u, eval=FALSE>>=
-%@
-%%
-%%
-%<<r_eta_prop, eval=FALSE>>=
-%@
-%%
-%%
-%<<d_eta, eval=FALSE>>=
-%@
-%%
-%%
-%<<r_u, eval=FALSE>>=
-%@
-%%
-%%
-%<<acceptance_prob, eval=FALSE>>=
-%@
-%%
-%$v
-%$70000$ samples was generated and with the function \textit{system.time()} it used %$923.74$ second to generate. 
-%%
-%<<start_code, fig.align='center', fig.width=6, fig.height=4, fig.cap="">>==
-%@
+<<acceptance_prob, eval=FALSE>>=
+@
+%
+All the components is implement we can now create the MCMC algorithm.
+The initial conditions for $\kappa_u$ and $\kappa_v$ is drawn from their prior distributions $\kappa_u \sim \G{\alpha_u,\beta_u}$ and $\kappa_v \sim \G(\alpha_v,\beta_v)$, using the R function \texttt{rgamma}. The initial condition $\vect{u} = \vect{0}$  is used to sample the initial proposal. To accept or reject a proposal $\vect{\eta}^*$, we draw from $x \sim \U[0,1]$, and accept if the $x \leq \vect{\eta}^*$. The function \texttt{myMCMC} returns a list containing $\vect{\eta}$-, $\vect{u}$-, $kappa_u$- and $kappa_v$-samples and a vector of acceptance probabilities.
+%
+<<myMCMC, eval=FALSE>>=
+@
+%
+To get the running time of our MCMC algorithm we used the R function \texttt{system.time} on the function call and stored this in the list \textit{samples} returned from the \texttt{myMCMC} function. The list is then saved along with the \textit{input}-list declaired above to save computation time in later exercises.
+
+%
+<<res2, eval=FALSE>>=
+@
+%

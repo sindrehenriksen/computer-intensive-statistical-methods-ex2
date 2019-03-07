@@ -4,9 +4,11 @@
 \usepackage{hyperref}
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
+\usepackage[colorinlistoftodos]{todonotes}
 
 \renewcommand{\thesection}{Exercise \arabic{section}}
 
+\newcommand{\U}{\mathcal{U}}
 \newcommand{\G}{\mathrm{Gamma}} % Gamma distribution
 \newcommand{\N}{\mathcal{N}} % normal distribution
 \newcommand{\Pois}{\mathrm{Pois}} % Poisson distribution
