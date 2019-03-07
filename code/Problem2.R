@@ -1,20 +1,19 @@
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
-
+## ---- libs2
 library(spam)
 library(tidyverse)
 library(fields, warn.conflicts = FALSE)
 source("./data/ex2_additionalFiles/dmvnorm.R")
 library(colorspace)
 library(ggpubr)
-## ---- 2
 
+## ---- data2a
 load("./data/ex2_additionalFiles/tma4300_ex2_Rmatrix.Rdata")
 str(Oral)
 attach(Oral)
 
-## ---- Start_code
 # a list of all the input variables to make code more readable
 input <- list(
   y = Oral$Y, 
@@ -25,18 +24,18 @@ input <- list(
   R = R
   )
 
-# getting the b-values
+## ---- functions
+# b values 
 get_b <- function(input,z){
   return(input$y+input$E*exp(z)*(z-1))
 }
 
-# getting the c values
+# c values
 get_c <- function(input,z){
   return(input$E*exp(z))
 }
 
 
-## ---- functions
 # Draw samples from the full condition of kappa_u
 r_kappa_u <- function(input,u){
   shape = (input$n-1)/2 + input$alpha
@@ -139,6 +138,7 @@ myMCMC <- function(input, M){
   ))
 }
 
+## ---- save2a
 run_time <- system.time(samples <- myMCMC(input, M))
 samples$run_time = run_time
 save(samples,file = "data/samples.Rdata")
