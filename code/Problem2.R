@@ -83,7 +83,7 @@ d_eta_p <- function(input,eta,kappa_v,u){
 
 ## ---- d_eta_q
 # finding the p-value of eta from the
-# estimated full condition q(eta|...)
+# proposal density q(eta|...)
 d_eta_q <- function(input,eta,z,kappa_v,u){
   c_vec = get_c(input,z)
   b_vec = get_b(input,z)
@@ -111,13 +111,13 @@ myMCMC <- function(input, M){
   kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
   kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
   # choosing u around the mean
-  u = c(rep_len(0.0, input$n))
+  u = rep(0.0, input$n)
   eta <- r_eta_prop(input,u,u,kappa_v)
   eta_samples <- matrix(NA,nrow=M,ncol=input$n)
   u_samples <- matrix(NA,nrow=M,ncol=input$n)
-  kappa_u_samples <- vector()
-  kappa_v_samples <- vector()
-  accept_vec <- vector()
+  kappa_u_samples <- vector(length = M)
+  kappa_v_samples <- vector(length = M)
+  accept_vec <- vector(length = M)
   for (i in seq(1,M)){
     setTxtProgressBar(pb, i)
     kappa_u = r_kappa_u(input,u)
@@ -130,8 +130,8 @@ myMCMC <- function(input, M){
     }
     eta_samples[i,] = eta
     u_samples[i,] = u
-    kappa_u_samples = c(kappa_u_samples,kappa_u)
-    kappa_v_samples = c(kappa_v_samples,kappa_v)
+    kappa_u_samples[i] = kappa_u
+    kappa_v_samples[i] = kappa_v
   }
   return(list(
     eta = eta_samples,
@@ -142,7 +142,7 @@ myMCMC <- function(input, M){
   ))
 }
 
-## ---- save2
+## ---- res2
 run_time <- system.time(samples <- myMCMC(input, M))
 samples$run_time = run_time
 save(samples,file = "data/samples.Rdata")
