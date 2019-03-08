@@ -4,7 +4,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
-\usepackage[colorinlistoftodos]{todonotes}
+% \usepackage[colorinlistoftodos]{todonotes}
 
 \renewcommand{\thesection}{Exercise \arabic{section}}
 

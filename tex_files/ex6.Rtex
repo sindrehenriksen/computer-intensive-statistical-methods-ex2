@@ -1,6 +1,13 @@
 \section{}
 \label{sec:ex6}
+%157 429 222
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\begin{figure}
+    \centering
+    \includegraphics{fi}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}

@@ -1,2 +1,13 @@
+<<echo=FALSE, cache=FALSE>>=
+read_chunk("../code/Problem3.R")
+@
 \section{}
 \label{sec:ex3}
+In exercise 2 we have run an MCMC-algorithm and generated $M = 70000$ samples. We will use these results to create plots to understand how good this algorithm was.
+First we define the libraries we used.
+%
+<<libs2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+@
+%
+To create the figures we used \texttt{ggplot} from the \textit{tidyverse} package. This function needs data frames to operate. 
+    

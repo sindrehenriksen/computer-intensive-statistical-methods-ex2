@@ -16,10 +16,10 @@ attach(Oral)
 
 # a list of all the input variables to make code more readable
 input <- list(
-  y = Oral$Y, 
-  E = Oral$E, 
-  n = length(Oral$Y), 
-  alpha = 1, 
+  y = Oral$Y,
+  E = Oral$E,
+  n = length(Oral$Y),
+  alpha = 1,
   beta = 0.01,
   R = R
   )
@@ -75,9 +75,9 @@ r_eta_prop <- function(input,z,u,kappa_v){
 # finding the p-value of eta from the
 # full condition p(eta|...)
 d_eta_p <- function(input,eta,kappa_v,u){
-  return(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta + 
-           t(eta)%*%(kappa_v*u) + 
-           t(eta)%*%input$y - 
+  return(-1/2*t(eta)%*%diag.spam(kappa_v,input$n)%*%eta +
+           t(eta)%*%(kappa_v*u) +
+           t(eta)%*%input$y -
            t(exp(eta))%*%input$E)
 }
 
@@ -96,9 +96,9 @@ d_eta_q <- function(input,eta,z,kappa_v,u){
 # calculating the acceptance probability
 acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
   return(min(1,exp(
-      d_eta_p(input, eta_prop, kappa_v, u) + 
-      d_eta_q(input, eta, eta_prop, kappa_v, u) - 
-      d_eta_p(input, eta, kappa_v, u) - 
+      d_eta_p(input, eta_prop, kappa_v, u) +
+      d_eta_q(input, eta, eta_prop, kappa_v, u) -
+      d_eta_p(input, eta, kappa_v, u) -
       d_eta_q(input, eta_prop, eta, kappa_v, u))))
 }
 
