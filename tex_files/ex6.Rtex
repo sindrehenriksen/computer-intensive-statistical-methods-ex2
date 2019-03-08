@@ -33,4 +33,16 @@ Figure~\ref{fig:y_median_6a} shows the estimated standardized mortality rates $y
     \label{fig:posterior_marginals}
 \end{figure}
 
+Next we create models including the effect of a covariate representing cigarette consumption. This straight forward and quickly done using \texttt{R-INLA} (after some practice). We first incorporate the covariate as a linear effect, i.e. $\eta_i = u_i + v_i + \beta_{smoke}$. Then we use a second order random walk to enable non-linearity, using a Gamma prior with the default parameters $\alpha = 1$, $\beta = 5 \cdot 10^{-5}$. The models are implemented in the following code. We also get the DIC values for all the INLA models and plot the posterior median and a 95\% credible interval of the non-linear covariate.
+%
+<<6b, eval=FALSE>>=
+@
+%
 
+
+\begin{figure}
+    \centering
+    \includegraphics{figures/smoking_effect.pdf}
+    \caption{Posterior median and 95\% credible interval of the effect of the smoking covariate modelled as a second order random walk. The green line is the effect when modelled linearly with a constant subtracted for the sake of comparison.}
+    \label{fig:smoking_effect}
+\end{figure}
