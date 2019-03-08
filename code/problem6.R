@@ -37,7 +37,7 @@ result_a = inla(formula, family="poisson", data=data, E=E,
                 control.compute=list(dic=TRUE))
 summary(result_a)
 
-# Plot median of estimate divided by E in map
+# Plot median of posterior divided by E in map
 # (Y/E = E*exp(eta)/E = exp(eta))
 y_median_a = exp(result_a$summary.random$region_struct$`0.5quant`)
 pdf("../figures/y_median_a.pdf")
