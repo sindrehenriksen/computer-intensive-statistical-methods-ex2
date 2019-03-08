@@ -9,7 +9,10 @@ read_chunk("../code/problem6.R")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 We now implement the same model as before using \texttt{R-INLA}. The latent Gaussian model given in \eqref{eq:u_cond} is termed \texttt{besag} in \texttt{R-INLA}. The unstructured random effects are defined in the latent model \texttt{iid}. \texttt{R-INLA} further represent precision parameters $\tau$ as $\theta = \log \tau$, so we need to set our hyperpriors (the priors for $\kappa_u$ and $\kappa_v$) as \texttt{loggamma}. The parametrization is such that the parameters are still $\alpha_u$, $\beta_u$ and $\alpha_v$, $\beta_v$, respectively. The model is implemented and various plots created with the following code.
 %
-<<6_prelim>>=
+<<6_prelim, eval=FALSE>>=
+@
+\vspace{-1em}
+<<6a, eval=FALSE>>=
 @
 %
 
