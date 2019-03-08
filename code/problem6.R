@@ -35,7 +35,7 @@ formula = Y ~
 data = list(Y=Y, E=E, region_struct=region, region_random=region)
 result_a = inla(formula, family="poisson", data=data, E=E,
                 control.compute=list(dic=TRUE))
-summary(result_a)
+# summary(result_a)
 
 # Plot median of posterior divided by E in map
 # (Y/E = E*exp(eta)/E = exp(eta))
@@ -136,7 +136,7 @@ formula_b_rw2 = Y ~
   f(smoking, model="rw2")
 result_b_rw2 = inla(formula_b_rw2, family="poisson", data=data,
                     E=E, control.compute=list(dic=TRUE))
-summary(result_b_rw2)
+# summary(result_b_rw2)
 
 # Get DIC for all the models
 smoking_none_DIC = result_a$dic$dic
@@ -167,3 +167,5 @@ plot_smoking = ggplot(data) +
   labs(x="smoking", y="effect", col="")
 ggsave("../figures/smoking_effect.pdf", plot=plot_smoking,
        width=5.5, height=3, units="in", dpi=300)
+
+## ---- save
