@@ -5,7 +5,6 @@
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
 % \usepackage[colorinlistoftodos]{todonotes}
-\usepackage{xcolor}
 
 \renewcommand{\thesection}{Exercise \arabic{section}}
 
