@@ -1,4 +1,4 @@
-#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 # this is the solution to excercise 3
@@ -41,6 +41,49 @@ kappa <- data.frame(
 )
 
 MCMC_list <- data.frame(v[,1:4],u[,2:4],kappa[,2:4])
+fig_dist_v1 <- ggplot(v[burnin_step,]) +
+  geom_histogram(aes(x = v1),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_v2 <- ggplot(v[burnin_step,]) +
+  geom_histogram(aes(x = v2),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+
+fig_dist_v3 <- ggplot(u[burnin_step,]) +
+  geom_histogram(aes(x = v3),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_u1 <- ggplot(u[burnin_step,]) +
+  geom_histogram(aes(x = u1),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_u2 <- ggplot(u[burnin_step,]) +
+  geom_histogram(aes(x = u2),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_u3 <- ggplot(u[burnin_step,]) +
+  geom_histogram(aes(x = u3),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_kappa_u <- ggplot(kappa[burnin_step,]) +
+  geom_histogram(aes(x = kappa_u),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_kappa_v <- ggplot(kappa[burnin_step,]) +
+  geom_histogram(aes(x = kappa_v),
+                 bins = 100,
+                 colour = "white",
+                 fill = "grey37")
+fig_dist_MCMC <- list(fig_dist_v1, fig_dist_v2, fig_dist_v3, fig_dist_u1, fig_dist_u2, fig_dist_u3, fig_dist_kappa_u, fig_dist_kappa_v)
+save(fig_dist_MCMC, file = "data/figMCMC.Rdata")
 ## ---- 3a
 # trace plots
 ## ---- tracev
