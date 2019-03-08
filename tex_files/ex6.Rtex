@@ -7,20 +7,30 @@ read_chunk("../code/problem6.R")
 %157 429 222
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We now implement the same model as before using \texttt{R-INLA}. The latent Gaussian model given in \eqref{eq:u_cond} is termed \texttt{besag} in \texttt{R-INLA}. The unstructured random effects are defined in the latent model \texttt{iid}. \texttt{R-INLA} further represent precision parameters $\tau$ as $\theta = \log \tau$, so we need to set our hyperpriors (the priors for $\kappa_u$ and $\kappa_v$) as \texttt{loggamma}. The parametrization is such that the parameters are still $\alpha_u$, $\beta_u$ and $\alpha_v$, $\beta_v$, respectively. The model is implemented and various plots created with the following code.
+We now implement the same model as before using \texttt{R-INLA}. The latent Gaussian model given in \eqref{eq:u_cond} is termed \texttt{besag} in \texttt{R-INLA}. The unstructured random effects are defined in the latent model \texttt{iid}. \texttt{R-INLA} represents precision parameters $\tau$ as $\theta = \log \tau$ and defines the priors on $\theta$, so we need to set our hyperpriors (the priors for $\kappa_u$ and $\kappa_v$) as \texttt{loggamma}. The parametrization is such that the parameters are still $\alpha_u$, $\beta_u$ and $\alpha_v$, $\beta_v$, respectively. We set no intercept so the model is the same as before, and set \texttt{constr=FALSE} in the \texttt{besag} part to account for this. The model is implemented and various plots created with the following code.
 %
 <<6_prelim, eval=FALSE>>=
 @
-\vspace{-1em}
+\vspace{-2em}
 <<6a, eval=FALSE>>=
 @
 %
+Figure~\ref{fig:y_median_6a} shows the estimated standardized mortality rates $y_i/E_i$ using the median of the structured effect in the first model created using \texttt{R-INLA}. I.e. we estimate $y_i$ by $E_i \, \med (e^{u_i}) = E_i e^{\med(u_i)}$, since $e^x$ is monotone, and use the posterior marginal of $u$ to get an estimate for $\med (u)$. This is of course not a good estimate of the true median since we have not estimated the precise median formula for the Poisson distribution and have ignored $v$; it is a simple approximation. It does, however, give a good qualitative impression of the mortality rates - individuals living in the south-west or north-east have increased probability of dying of oral cavity cancer, while the probability is lower e.g. in the middle eastern part of Germany. That is, according to our model.
 
-\begin{center}
+\textcolor{red}{Figure~\ref{fig:posterior_marginals}blah blah}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/y_median_a.pdf}
+    \caption{Estimated standardized mortality rates $y_i/E_i$ using the median of the structured effect in the first model created using \texttt{R\_INLA} in \ref{sec:ex6}.}
+    \label{fig:y_median_6a}
+\end{figure}
+
 \begin{figure}
     \centering
     \includegraphics{figures/posterior_marginals.pdf}
     \caption{Caption}
     \label{fig:posterior_marginals}
 \end{figure}
-\end{center}
+
+

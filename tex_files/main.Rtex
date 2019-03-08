@@ -5,6 +5,7 @@
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
 % \usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xcolor}
 
 \renewcommand{\thesection}{Exercise \arabic{section}}
 
@@ -23,6 +24,7 @@
 \newcommand{\probq}[1]{\mathrm{q}#1} % probability approx q()
 \newcommand{\trsp}[1]{{#1}^\intercal} % transpose
 \newcommand{\given}[1]{\, | \, #1} % given
+\newcommand{\med}{\text{median}}
 
 <<echo=FALSE>>=
 options(width=30)
