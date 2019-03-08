@@ -41,6 +41,8 @@ kappa <- data.frame(
 )
 
 MCMC_list <- data.frame(v[,1:4],u[,2:4],kappa[,2:4])
+save(MCMC_list,file = "data/mcmc_df.Rdata")
+
 fig_dist_v1 <- ggplot(v[burnin_step,]) +
   geom_histogram(aes(x = v1),
                  bins = 100,
