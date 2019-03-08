@@ -1,7 +1,7 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
-## ---- 6b_prelim
+## ---- 6_prelim
 # Libraries
 library(INLA)
 library(spam)
@@ -64,34 +64,43 @@ v3_marginal = inla.smarginal(result_a$marginals.random$region_random[[i1]])
 # Plot marginals
 p_kappa_u = ggplot(as_tibble(kappa_u_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=expression(kappa[u]), y="density")
+  labs(x=expression(kappa[u]), y="") +
+  theme(plot.margin = unit(c(0.1, 0.1, 0, -0.4), "cm"))
 p_kappa_v = ggplot(as_tibble(kappa_v_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=expression(kappa[v]), y="density")
+  labs(x=expression(kappa[v]), y="") +
+  xlim(c(min(kappa_u_marginal$x), 1000)) +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u1 = ggplot(as_tibble(u1_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("u_{", rns[1], "}")), y="density")
+  labs(x=TeX(paste0("u_{", rns[1], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm")) +
+  xlim(c(min(u1_marginal$x), 1.5))
 p_u2 = ggplot(as_tibble(u2_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("u_{", rns[2], "}")), y="density")
+  labs(x=TeX(paste0("u_{", rns[2], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u3 = ggplot(as_tibble(u3_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("u_{", rns[3], "}")), y="density")
+  labs(x=TeX(paste0("u_{", rns[3], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v1 = ggplot(as_tibble(v1_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("v_{", rns[1], "}")), y="density")
+  labs(x=TeX(paste0("v_{", rns[1], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v2 = ggplot(as_tibble(v2_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("v_{", rns[2], "}")), y="density")
+  labs(x=TeX(paste0("v_{", rns[2], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v3 = ggplot(as_tibble(v3_marginal)) +
   geom_line(aes(x, y)) +
-  labs(x=TeX(paste0("v_{", rns[3], "}")), y="density")
+  labs(x=TeX(paste0("v_{", rns[3], "}")), y="") +
+  theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_marginals = grid.arrange(
   p_kappa_u, p_kappa_v, p_u1, p_v1, p_u2, p_v2, p_u3, p_v3,
   ncol=2)
 ggsave("../figures/posterior_marginals.pdf",
-       plot = p_marginals, scale = 1, width = 7, height = 7, units = "in",
-       dpi = 300, limitsize = TRUE)
+       plot = p_marginals, width = 5, height = 6, units = "in", dpi = 300)
 
 ## ---- 6b
 smoking = read.table("./data/ex2_additionalFiles/smoking.dat")
@@ -148,5 +157,4 @@ plot_smoking = ggplot(data) +
 
 ## ---- save
 ggsave("../figures/smoking_effect.pdf",
-       plot = plot_smoking, scale = 1, width = 5.5, height = 3, units = "in",
-       dpi = 300, limitsize = TRUE)
+       plot = plot_smoking, width = 5.5, height = 3, units = "in", dpi = 300)
