@@ -8,6 +8,9 @@ library(spam)
 library(fields, warn.conflict=FALSE)
 library(colorspace)
 library(ggplot2)
+library(tibble)
+library(gridExtra)
+library(latex2exp)
 
 # Load and prepare data
 # str(Oral)
@@ -42,11 +45,53 @@ dev.off()
 # Improve estimates of the posterior marginals
 result_a = inla.hyperpar(result_a)
 
-# Plot
+# Get and smooth marginals
+rns = c(157, 222, 429) #######################################
 kappa_u_marginal = result_a$marginals.hyperpar$`Precision for region_struct`
+kappa_u_marginal = inla.smarginal(kappa_u_marginal)
 kappa_v_marginal = result_a$marginals.hyperpar$`Precision for region_random`
-plot(inla.smarginal(kappa_u_marginal))
-plot(inla.smarginal(kappa_v_marginal))
+kappa_v_marginal = inla.smarginal(kappa_v_marginal)
+i1 = paste0("index.", rns[1])
+i2 = paste0("index.", rns[2])
+i3 = paste0("index.", rns[3])
+u1_marginal = inla.smarginal(result_a$marginals.random$region_struct[[i1]])
+u2_marginal = inla.smarginal(result_a$marginals.random$region_struct[[i2]])
+u3_marginal = inla.smarginal(result_a$marginals.random$region_struct[[i3]])
+v1_marginal = inla.smarginal(result_a$marginals.random$region_random[[i1]])
+v2_marginal = inla.smarginal(result_a$marginals.random$region_random[[i2]])
+v3_marginal = inla.smarginal(result_a$marginals.random$region_random[[i1]])
+
+# Plot marginals
+p_kappa_u = ggplot(as_tibble(kappa_u_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=expression(kappa[u]), y="density")
+p_kappa_v = ggplot(as_tibble(kappa_v_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=expression(kappa[v]), y="density")
+p_u1 = ggplot(as_tibble(u1_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("u_{", rns[1], "}")), y="density")
+p_u2 = ggplot(as_tibble(u2_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("u_{", rns[2], "}")), y="density")
+p_u3 = ggplot(as_tibble(u3_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("u_{", rns[3], "}")), y="density")
+p_v1 = ggplot(as_tibble(v1_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("v_{", rns[1], "}")), y="density")
+p_v2 = ggplot(as_tibble(v2_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("v_{", rns[2], "}")), y="density")
+p_v3 = ggplot(as_tibble(v3_marginal)) +
+  geom_line(aes(x, y)) +
+  labs(x=TeX(paste0("v_{", rns[3], "}")), y="density")
+p_marginals = grid.arrange(
+  p_kappa_u, p_kappa_v, p_u1, p_v1, p_u2, p_v2, p_u3, p_v3,
+  ncol=2)
+ggsave("../figures/posterior_marginals.pdf",
+       plot = p_marginals, scale = 1, width = 7, height = 7, units = "in",
+       dpi = 300, limitsize = TRUE)
 
 ## ---- 6b
 smoking = read.table("./data/ex2_additionalFiles/smoking.dat")
@@ -84,7 +129,7 @@ smoking_eff_025 = result_b_rw2$summary.random$smoking$`0.025quant`
 smoking_eff_5 = result_b_rw2$summary.random$smoking$`0.5quant`
 smoking_eff_975 = result_b_rw2$summary.random$smoking$`0.975quant`
 
-data = data.frame(
+data = tibble(
   x = smoking_val,
   lin = smoking_beta * smoking_val + smoking_eff_5[1],
   med = smoking_eff_5,
