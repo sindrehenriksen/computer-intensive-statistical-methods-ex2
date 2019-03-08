@@ -4,10 +4,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\begin{center}
 \begin{figure}
     \centering
-    \includegraphics{fi}
+    \includegraphics{figures/posterior_marginals.pdf}
     \caption{Caption}
-    \label{fig:my_label}
+    \label{fig:posterior_marginals}
 \end{figure}
+\end{center}
