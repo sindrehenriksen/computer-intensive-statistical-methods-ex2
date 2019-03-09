@@ -71,46 +71,82 @@ v2_marginal = inla.smarginal(
 v3_marginal = inla.smarginal(
   result_a$marginals.random$region_random[[i1]])
 
-# Plot marginals
+# Load mcmc sample data
+load("data/mcmc_df.Rdata")
+MCMC_list = MCMC_list[!(MCMC_list$is_burnin),]
+kappa_u_samples = tibble(x=MCMC_list$kappa_u)
+kappa_v_samples = tibble(x=MCMC_list$kappa_v)
+u1_samples = tibble(x=MCMC_list$u1)
+u2_samples = tibble(x=MCMC_list$u2)
+u3_samples = tibble(x=MCMC_list$u3)
+v1_samples = tibble(x=MCMC_list$v1)
+v2_samples = tibble(x=MCMC_list$v2)
+v3_samples = tibble(x=MCMC_list$v3)
+
+# Plot marginals and histograms
 p_kappa_u = ggplot(as_tibble(kappa_u_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=kappa_u_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=expression(kappa[u]), y="") +
   theme(plot.margin = unit(c(0.1, 0.1, 0, -0.4), "cm"))
 p_kappa_v = ggplot(as_tibble(kappa_v_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=kappa_v_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=expression(kappa[v]), y="") +
   xlim(c(min(kappa_u_marginal$x), 1000)) +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u1 = ggplot(as_tibble(u1_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=u1_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[1], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm")) +
   xlim(c(min(u1_marginal$x), 1.5))
 p_u2 = ggplot(as_tibble(u2_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=u2_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[2], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u3 = ggplot(as_tibble(u3_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=u3_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[3], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v1 = ggplot(as_tibble(v1_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=v1_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[1], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v2 = ggplot(as_tibble(v2_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=v2_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[2], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v3 = ggplot(as_tibble(v3_marginal)) +
-  geom_line(aes(x, y)) +
+  geom_line(aes(x, y), col="darkred") +
+  geom_histogram(
+    data=v3_samples, aes(x, y=..density..),
+    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[3], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_marginals = grid.arrange(
   p_kappa_u, p_kappa_v, p_u1, p_v1, p_u2, p_v2, p_u3, p_v3,
   ncol=2)
 ggsave("../figures/posterior_marginals.pdf", plot=p_marginals,
-       width=6, height=7, units="in", dpi=300)
+       width=5, height=7, units="in", dpi=300)
 
 ## ---- 6b
 smoking = read.table("./data/ex2_additionalFiles/smoking.dat")
@@ -169,3 +205,5 @@ ggsave("../figures/smoking_effect.pdf", plot=plot_smoking,
        width=5.5, height=3, units="in", dpi=300)
 
 ## ---- save
+save(smoking_none_DIC, smoking_lin_DIC, smoking_rw2_DIC,
+     file="data/6b.Rdata")
