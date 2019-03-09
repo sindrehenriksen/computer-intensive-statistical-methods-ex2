@@ -37,8 +37,13 @@ Next we create models including the effect of a covariate representing cigarette
 %
 <<6b, eval=FALSE>>=
 @
+<<echo=FALSE>>=
+load("../code/data/6b.Rdata")
+@
 %
+The DIC values for the model without the smoking covariate, the model with the smoking covariate as a linear effect and the model with the smoking covariate as a non-linear effect are \Sexpr{format(round(smoking_none_DIC, 1), nsmall=1)}, \Sexpr{format(round(smoking_lin_DIC, 1), nsmall=1)} and \Sexpr{format(round(smoking_rw2_DIC, 1), nsmall=1)}, respectively. The DIC (deviance information criterion) measures the fit to the data while penalizing the complexity of the model (lower values are better). Using this criteria we conclude that including smoking as a covariate results in better models. 
 
+The difference between the two models including the smoking covariate seems to be very small. Considering the plot in figure~\ref{fig:smoking_effect} this is not surprising, since the non-linear effect of smoking in the third model is not very different from the linear effect in the second model - except for a constant, which will likely be compensated for in the structured part of the model. Since the second model has a lower DIC, and it also is a simpler model, which is preferable, this seems to be the optimal model of the three.
 
 \begin{figure}
     \centering
