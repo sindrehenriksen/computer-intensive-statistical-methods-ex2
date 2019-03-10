@@ -87,59 +87,59 @@ v3_samples = tibble(x=MCMC_list$v3)
 p_kappa_u = ggplot(as_tibble(kappa_u_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=kappa_u_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=kappa_u_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=expression(kappa[u]), y="") +
   theme(plot.margin = unit(c(0.1, 0.1, 0, -0.4), "cm"))
 p_kappa_v = ggplot(as_tibble(kappa_v_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=kappa_v_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=kappa_v_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=expression(kappa[v]), y="") +
   xlim(c(min(kappa_u_marginal$x), 1000)) +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u1 = ggplot(as_tibble(u1_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=u1_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=u1_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[1], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm")) +
   xlim(c(min(u1_marginal$x), 1.5))
 p_u2 = ggplot(as_tibble(u2_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=u2_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=u2_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[2], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_u3 = ggplot(as_tibble(u3_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=u3_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=u3_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("u_{", rns[3], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v1 = ggplot(as_tibble(v1_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=v1_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=v1_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[1], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v2 = ggplot(as_tibble(v2_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=v2_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=v2_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[2], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_v3 = ggplot(as_tibble(v3_marginal)) +
   geom_line(aes(x, y), col="darkred") +
   geom_histogram(
-    data=v3_samples, aes(x, y=..density..),
-    bins=100, fill="cornflowerblue", col="white", alpha=0.5) +
+    data=v3_samples, aes(x, y=..density..), size=0.1,
+    bins=70, fill="cornflowerblue", col="white", alpha=0.5) +
   labs(x=TeX(paste0("v_{", rns[3], "}")), y="") +
   theme(plot.margin = unit(c(0, 0.1, 0, -0.4), "cm"))
 p_marginals = grid.arrange(
