@@ -17,7 +17,7 @@ We now implement the same model as before using \texttt{R-INLA}. The latent Gaus
 %
 Figure~\ref{fig:y_median_6a} shows the estimated standardized mortality rates $y_i/E_i$ using the median of the structured effect in the first model created using \texttt{R-INLA}. I.e. we estimate $y_i$ by $E_i \, \med (e^{u_i}) = E_i e^{\med(u_i)}$, since $e^x$ is monotone, and use the posterior marginal of $u$ to get an estimate for $\med (u)$. This is of course not a good estimate of the true median since we have not estimated the precise median formula for the Poisson distribution and have ignored $v$; it is a simple approximation. It does, however, give a good qualitative impression of the mortality rates - individuals living in the south-west or north-east have increased probability of dying of oral cavity cancer, while the probability is lower e.g. in the middle eastern part of Germany. That is, according to our model.
 
-\textcolor{red}{Figure~\ref{fig:posterior_marginals}blah blah}
+\textcolor{red}{Number of samples? }Figure~\ref{fig:posterior_marginals} shows histograms of MCMC-samples and posterior marginals obtained using INLA for $\kappa_u$, $\kappa_v$ and three randomly chosen components of $\vect{u}$ and $\vect{v}$. The histograms are not as precise as the marginals obtained using INLA although they are close - \textcolor{red}{except for the samples for $v_{429}$, which are biased a little to the left compared to the marginal obtained by INLA}. And the INLA estimates are obtained within few seconds, \textcolor{red}{while MCMC...} The fact that the results are so similar is a good indication that both models are implemented correctly and work as expected.
 
 \begin{figure}
     \centering
@@ -29,7 +29,7 @@ Figure~\ref{fig:y_median_6a} shows the estimated standardized mortality rates $y
 \begin{figure}
     \centering
     \includegraphics{figures/posterior_marginals.pdf}
-    \caption{Caption}
+    \caption{Histograms of MCMC-samples and posterior marginals obtained by using INLA (red lines) for $\kappa_u, \kappa_v$ and three randomly chosen components of $\vect{u}$ and $\vect{v}$.}
     \label{fig:posterior_marginals}
 \end{figure}
 
@@ -48,6 +48,6 @@ The difference between the two models including the smoking covariate seems to b
 \begin{figure}
     \centering
     \includegraphics{figures/smoking_effect.pdf}
-    \caption{Posterior median and 95\% credible interval of the effect of the smoking covariate modelled as a second order random walk. The green line is the effect when modelled linearly with a constant subtracted for the sake of comparison.}
+    \caption{Posterior median and 95\% credible interval of the effect of the smoking covariate modelled as a second order random walk. The green line is the effect when modelled linearly, with a constant subtracted for the sake of comparison.}
     \label{fig:smoking_effect}
 \end{figure}
