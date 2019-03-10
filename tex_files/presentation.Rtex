@@ -1,0 +1,63 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{default}
+\usecolortheme{seahorse}
+
+\title{Computer Intensive Statistical Methods \newline Exercise 2, Problem 6b}
+\author{Martin Outzen Berild, Sindre Henriksen}
+\institute{NTNU}
+\date{March 2019}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Problem 6b}
+    Extend the INLA model formulation of part a) to incorporate a covariate representing cigarette consumption
+    \begin{itemize}
+    \item[1)] as a linear effect,
+    \item[2)] as a non-linear effect using a random walk of second order (\texttt{rw2}).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementation}
+    % <<presentation, eval=FALSE>=
+    % formula_lin = Y ~ -1 + f(region_struct, model="besag", graph.file=g, constr=FALSE, hyper=hyper) + f(region_random, model="iid", hyper=hyper) + smoking
+    % result_b_lin = inla(formula_b_lin, family="poisson", data=data, E=E, control.compute=list(dic=TRUE))
+    % @
+    <<pres_lin, eval=FALSE>>=
+    formula = Y ~ -1 +
+        f(region_struct, model="besag", graph.file=g,
+        constr=FALSE, hyper=hyper) +
+        f(region_random, model="iid", hyper=hyper) +
+        smoking
+    @
+    \vspace{-1em}
+    <<pres_rw2, eval=FALSE>>=
+    formula = Y ~ -1 +
+        f(region_struct, model="besag", graph.file=g,
+        constr=FALSE, hyper=hyper) +
+        f(region_random, model="iid", hyper=hyper) +
+        f(smoking, model="rw2")
+    @
+    \vspace{-1em}
+    <<pres_res, eval=FALSE>>=
+    result = inla(formula, family="poisson", data=data,
+                  E=E, control.compute=list(dic=TRUE))
+    @
+\end{frame}
+
+<<echo=FALSE>>=
+load("../code/data/6b.Rdata")
+@
+\begin{frame}{Model evaluation}
+    DIC values
+    %for the model without the smoking covariate, the model with the smoking covariate as a linear effect and the model with the smoking covariate as a non-linear effect are 
+    \begin{itemize}
+        \item \makebox[7cm]{Smoking covariate not included:\hfill} \Sexpr{format(round(smoking_none_DIC, 1), nsmall=1)}, 
+        \item \makebox[7cm]{Smoking covariate included as linear effect:\hfill} \Sexpr{format(round(smoking_lin_DIC, 1), nsmall=1)}, 
+        \item \makebox[7.5cm]{Smoking covariate included as non-linear effect:\hfill} \Sexpr{format(round(smoking_rw2_DIC, 1), nsmall=1)}, 
+    \end{itemize}
+\end{frame}
+
+\end{document}
