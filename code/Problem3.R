@@ -10,7 +10,7 @@ library(ggpubr)
 set.seed(123)
 load("data/input.Rdata")
 load("data/samples.Rdata")
-# Using a burning 
+
 # ---- dfCreate
 r_cols <- sort(sample(1:input$n,3,replace = F))
 M <- length(samples$eta[,1])
@@ -42,50 +42,6 @@ kappa <- data.frame(
 
 MCMC_list <- data.frame(v[,1:4],u[,2:4],kappa[,2:4])
 save(MCMC_list,file = "data/mcmc_df.Rdata")
-
-fig_dist_v1 <- ggplot(v[burnin_step,]) +
-  geom_histogram(aes(x = v1),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_v2 <- ggplot(v[burnin_step,]) +
-  geom_histogram(aes(x = v2),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-
-fig_dist_v3 <- ggplot(u[burnin_step,]) +
-  geom_histogram(aes(x = v3),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_u1 <- ggplot(u[burnin_step,]) +
-  geom_histogram(aes(x = u1),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_u2 <- ggplot(u[burnin_step,]) +
-  geom_histogram(aes(x = u2),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_u3 <- ggplot(u[burnin_step,]) +
-  geom_histogram(aes(x = u3),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_kappa_u <- ggplot(kappa[burnin_step,]) +
-  geom_histogram(aes(x = kappa_u),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_kappa_v <- ggplot(kappa[burnin_step,]) +
-  geom_histogram(aes(x = kappa_v),
-                 bins = 100,
-                 colour = "white",
-                 fill = "grey37")
-fig_dist_MCMC <- list(fig_dist_v1, fig_dist_v2, fig_dist_v3, fig_dist_u1, fig_dist_u2, fig_dist_u3, fig_dist_kappa_u, fig_dist_kappa_v)
-save(fig_dist_MCMC, file = "data/figMCMC.Rdata")
 ## ---- 3a
 # trace plots
 ## ---- tracev
@@ -124,6 +80,9 @@ fig_v <- ggarrange(
 fig_v <- annotate_figure(fig_v,
                 top = text_grob("Traceplot of v", color = "black", face = "bold", size = 14)
 )
+save(fig_v, file = "../figures/trace_v.Rdata")
+## ---- traceVplot
+load(file = "../figures/trace_v.Rdata")
 fig_v
 ## ---- break
 ggsave("../figures/trace_v.pdf", plot = fig_v, device = NULL, path = NULL,
