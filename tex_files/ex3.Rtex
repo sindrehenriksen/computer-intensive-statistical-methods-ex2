@@ -10,4 +10,15 @@ First we define the libraries we used.
 @
 %
 To create the figures we used \texttt{ggplot} from the \textit{tidyverse} package. This function needs data frames to operate. 
-    
+We are looking at the traceplots of $\vect{v}$, $\vect{u}$, $kappa_u$ and $\kappa_v$, with $\vect{v}$ being white noise of eta. 
+%
+<<dfCreate, eval = FALSE>>==
+@
+%
+%
+<<tracev, eval = FALSE>>==
+@
+%
+<<traceVplot, echo = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+@
+%
