@@ -21,10 +21,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Implementation}
-    % <<presentation, eval=FALSE>=
-    % formula_lin = Y ~ -1 + f(region_struct, model="besag", graph.file=g, constr=FALSE, hyper=hyper) + f(region_random, model="iid", hyper=hyper) + smoking
-    % result_b_lin = inla(formula_b_lin, family="poisson", data=data, E=E, control.compute=list(dic=TRUE))
-    % @
+    \vspace{-1em}
     <<pres_lin, eval=FALSE>>=
     formula = Y ~ -1 +
         f(region_struct, model="besag", graph.file=g,
@@ -52,12 +49,20 @@ load("../code/data/6b.Rdata")
 @
 \begin{frame}{Model evaluation}
     DIC values
-    %for the model without the smoking covariate, the model with the smoking covariate as a linear effect and the model with the smoking covariate as a non-linear effect are 
     \begin{itemize}
-        \item \makebox[7cm]{Smoking covariate not included:\hfill} \Sexpr{format(round(smoking_none_DIC, 1), nsmall=1)}, 
-        \item \makebox[7cm]{Smoking covariate included as linear effect:\hfill} \Sexpr{format(round(smoking_lin_DIC, 1), nsmall=1)}, 
-        \item \makebox[7.5cm]{Smoking covariate included as non-linear effect:\hfill} \Sexpr{format(round(smoking_rw2_DIC, 1), nsmall=1)}, 
+        \item \makebox[7.7cm]{Smoking covariate not included:\hfill} \Sexpr{format(round(smoking_none_DIC, 1), nsmall=1)}
+        \item \makebox[7.7cm]{Smoking covariate included as linear effect:\hfill} \Sexpr{format(round(smoking_lin_DIC, 1), nsmall=1)}
+        \item \makebox[7.7cm]{Smoking covariate included as non-linear effect:\hfill} \Sexpr{format(round(smoking_rw2_DIC, 1), nsmall=1)}
     \end{itemize}
+\end{frame}
+
+\begin{frame}{Covariate effect}
+    \begin{figure}
+        \centering
+        \includegraphics[width=10cm]{figures/smoking_effect.pdf}
+        \caption{Posterior median and 95\% credible interval of the effect of the smoking covariate modelled as a second order random walk. The green line is the effect when modelled linearly, with a constant subtracted for the sake of comparison.}
+        \label{fig:smoking_effect}
+    \end{figure}
 \end{frame}
 
 \end{document}
