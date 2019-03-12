@@ -10,15 +10,77 @@ First we define the libraries we used.
 @
 %
 To create the figures we used \texttt{ggplot} from the \textit{tidyverse} package. This function needs data frames to operate. 
-We are looking at the traceplots of $\vect{v}$, $\vect{u}$, $kappa_u$ and $\kappa_v$, with $\vect{v}$ being white noise of eta. 
+We are looking at the trace plots of $\vect{v}$, $\vect{u}$, $kappa_u$ and $\kappa_v$, with $\vect{v}$ being white noise of $\eta$. 
 %
 <<dfCreate, eval = FALSE>>==
 @
 %
 %
+\paragraph{(a)}
+To start out we look at trace plots with a chosen burn in period removed. The burn in size is chosen by looking at the trace plots, and deciding with a good margin that the sequence has converged. 
 <<tracev, eval = FALSE>>==
 @
 %
-<<traceVplot, echo = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/trace_v.pdf}
+    \caption{}
+    \label{fig:trace_v_3a}
+\end{figure}
+%
+<<traceu, eval = FALSE>>==
 @
 %
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/trace_u.pdf}
+    \caption{}
+    \label{fig:trace_u_3a}
+\end{figure}
+%
+<<tracekappa, eval = FALSE>>==
+@
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/trace_kappa.pdf}
+    \caption{}
+    \label{fig:trace_kappa_3a}
+\end{figure}
+%
+<<tracekappa, eval = FALSE>>==
+@
+%
+\paragraph{(b)}
+%
+<<acfv, eval = FALSE>>==
+@
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/acf_v.pdf}
+    \caption{}
+    \label{fig:acf_v_3a}
+\end{figure}
+%
+<<acfu, eval = FALSE>>==
+@
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/acf_u.pdf}
+    \caption{}
+    \label{fig:acf_u_3a}
+\end{figure}
+%
+<<acfkappa, eval = FALSE>>==
+@
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/acf_kappa.pdf}
+    \caption{}
+    \label{fig:acf_kappa_3a}
+\end{figure}
+
+\paragraph{(c)}
