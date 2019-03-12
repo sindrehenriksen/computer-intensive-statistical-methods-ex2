@@ -1,4 +1,4 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 # this is the solution to excercise 3
@@ -11,12 +11,27 @@ set.seed(123)
 load("data/input.Rdata")
 load("data/samples.Rdata")
 
-# ---- dfCreate
+## ---- dfCreate
 r_cols <- sort(sample(1:input$n,3,replace = F))
 M <- length(samples$eta[,1])
 burnin = 5000
 steps <- seq(1,M)
 burnin_step = seq(burnin,M)
+
+MCMC_list <- data.frame(
+  steps = steps,
+  v1 = samples$eta[steps,r_cols[1]] - samples$u[steps,r_cols[1]],
+  v2 = samples$eta[steps,r_cols[2]] - samples$u[steps,r_cols[2]],
+  v3 = samples$eta[steps,r_cols[3]] - samples$u[steps,r_cols[3]],
+  u1 = samples$u[steps,r_cols[1]],
+  u2 = samples$u[steps,r_cols[2]],
+  u3 = samples$u[steps,r_cols[3]],
+  kappa_u = samples$kappa_u[steps],
+  kappa_v = samples$kappa_v[steps],
+  is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin)))
+save(MCMC_list,file = "data/mcmc_df.Rdata")
+
+## ---- break
 v <- data.frame(
   steps = steps,
   v1 = samples$eta[steps,r_cols[1]] - samples$u[steps,r_cols[1]],
@@ -40,10 +55,41 @@ kappa <- data.frame(
   is_burnin = c(rep(TRUE,burnin),rep(FALSE,M-burnin))
 )
 
-MCMC_list <- data.frame(v[,1:4],u[,2:4],kappa[,2:4])
-save(MCMC_list,file = "data/mcmc_df.Rdata")
 ## ---- 3a
 # trace plots
+fig_3a <- ggarrange(
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = v1, color = is_burnin)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = v2, color = is_burnin)) +
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = v3)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = u1)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = u2)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = u3)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps,y = kappa_u)) + 
+    geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
+  ggplot(MCMC_list[burnin_step,], aes(x = steps, y = kappa_v)) + 
+    geom_line(color = "grey24") + rremove("ylab"),
+  nrow = 8,
+  ncol = 1,
+  labels = c(sprintf("v[m = %d]",r_cols[1]), sprintf("v[m = %d]",r_cols[2]), sprintf("v[m = %d]",r_cols[3]),
+             sprintf("u[m = %d]",r_cols[1]), sprintf("u[m = %d]",r_cols[2]), sprintf("u[m = %d]",r_cols[3])
+             ,"kappa_u","kappa_v"),
+  font.label = list(size = 10, color = "firebrick1"),
+  label.x = 0,
+  label.y = 1,
+  hjust= -1.7,
+  vjust = 1.9
+)
+fig_3a
+ggsave("../figures/trace.pdf", plot = fig_3a, device = NULL, path = NULL,
+       scale = 1, width = 5.5, height = 2*4, units = "in",
+       dpi = 300, limitsize = TRUE)
+
 ## ---- tracev
 fig_v <- ggarrange(
   ggplot(v, aes(x = steps, y = v1, color = is_burnin)) + 
@@ -80,10 +126,6 @@ fig_v <- ggarrange(
 fig_v <- annotate_figure(fig_v,
                 top = text_grob("Traceplot of v", color = "black", face = "bold", size = 14)
 )
-save(fig_v, file = "../figures/trace_v.Rdata")
-## ---- traceVplot
-load(file = "../figures/trace_v.Rdata")
-fig_v
 ## ---- break
 ggsave("../figures/trace_v.pdf", plot = fig_v, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
