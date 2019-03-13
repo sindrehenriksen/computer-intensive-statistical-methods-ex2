@@ -72,15 +72,15 @@ ggsave("../figures/trace.pdf", plot = fig_3a, device = NULL, path = NULL,
 # autocorrelation plots
 
 MCMC_acf <- data.frame(
-  lag = acf(v$v1[burnin_step],plot = F)$lag, 
-  v1 = acf(v$v1[burnin_step],plot = F)$acf,
-  v2 = acf(v$v2[burnin_step],plot = F)$acf, 
-  v3 = acf(v$v3[burnin_step],plot = F)$acf,
-  u1 = acf(u$u1[burnin_step],plot = F)$acf,
-  u2 = acf(u$u2[burnin_step],plot = F)$acf, 
-  u3 = acf(u$u3[burnin_step],plot = F)$acf,
-  kappa_u = acf(kappa$kappa_u[burnin_step],plot = F)$acf,
-  kappa_v = acf(kappa$kappa_v[burnin_step],plot = F)$acf
+  lag = acf(MCMC_list$kappa_v[burnin_step],plot = F,lag.max = 200)$lag, 
+  v1 = acf(MCMC_list$v1[burnin_step],plot = F,lag.max = 200)$acf,
+  v2 = acf(MCMC_list$v2[burnin_step],plot = F,lag.max = 200)$acf, 
+  v3 = acf(MCMC_list$v3[burnin_step],plot = F,lag.max = 200)$acf,
+  u1 = acf(MCMC_list$u1[burnin_step],plot = F,lag.max = 200)$acf,
+  u2 = acf(MCMC_list$u2[burnin_step],plot = F,lag.max = 200)$acf, 
+  u3 = acf(MCMC_list$u3[burnin_step],plot = F,lag.max = 200)$acf,
+  kappa_u = acf(MCMC_list$kappa_u[burnin_step],plot = F,lag.max = 200)$acf,
+  kappa_v = acf(MCMC_list$kappa_v[burnin_step],plot = F,lag.max = 200)$acf
 )
 
 
