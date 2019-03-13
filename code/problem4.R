@@ -11,5 +11,10 @@ load("data/input.Rdata")
 load("data/mcmc_df.Rdata")
 ess <- effectiveSize(data.frame(MCMC_list$kappa_u[MCMC_list$is_burnin==F],
                                 MCMC_list$kappa_v[MCMC_list$is_burnin==F]))
-kable(ess, "latex", booktabs = T) %>%
+essTable <- kable(ess, "latex", booktabs = T) %>%
   kable_styling(latex_options = c("striped", "scale_down"))
+## ---- break
+save(file = "data/essTable.Rdata",essTable)
+## ---- essTable
+load("data/essTable.Rdata")
+essTable
