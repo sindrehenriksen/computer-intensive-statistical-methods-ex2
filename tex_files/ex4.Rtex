@@ -1,2 +1,14 @@
+<<echo=FALSE, cache=FALSE>>=
+read_chunk("../code/problem4.R")
+@
 \section{}
 \label{sec:ex4}
+In this exercise we will calculate the effective samples size of the precision parameter $\kappa_u$ and  $\kappa_v$ that we have sampled.
+%
+<<ess, eval=FALSE>>==
+@
+%
+%
+<<essTable, eval=FALSE>>==
+@
+%

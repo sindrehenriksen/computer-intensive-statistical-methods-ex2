@@ -17,7 +17,7 @@ We are looking at the trace plots of $\vect{v}$, $\vect{u}$, $kappa_u$ and $\kap
 %
 %
 \paragraph{(a)}
-To start out we look at trace plots with a chosen burn in period removed. The burn in size is chosen by looking at the trace plots, and deciding with a good margin that the sequence has converged. 
+To start out we look at trace plots with a chosen burn in period removed. The size of the burn-in is chosen by looking at the trace plots. 
 <<3a, eval = FALSE>>==
 @
 %
@@ -28,8 +28,9 @@ To start out we look at trace plots with a chosen burn in period removed. The bu
     \label{fig:trace}
 \end{figure}
 
-
+Looking at the trace plots for the three different parameters for $\vect{u}$ and $\vect{v}$ in figure \ref{fig:trace}, we see that the parameters explore much of the domain, and have look like a band. This is a good indication of convergence of the MCMC. As for $\kappa_u$ and $\kappa_v$ they seem to explore less of the domain, and rarely moves far away from their mean. Also we see the mean of the $\vect{v}$s' is close to zero which is what we should expect for white noise. 
 \paragraph{(b)}
+Using the same samples we will now look at their autocorrelation. We will do this by using the R-function \texttt{acf}, which we create autocorrelation plots of the different samples.  
 %
 <<3b, eval = FALSE>>==
 @
@@ -41,5 +42,6 @@ To start out we look at trace plots with a chosen burn in period removed. The bu
     \label{fig:acf}
 \end{figure}
 %
-
+In figure \ref{fig:acf} we can see that the autocorrelation for the $\vect{u}$s' and the $\vect{v}$s' is close to uncorrelated, but for $\kappa_u$ and $\kappa_v$ we can see a larger degree of autocorrelation. 
 \paragraph{(c)}
+Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. A geweke diagnostic is done by removing the burning, then taking the first $10\%$ and the last $50\%$ of the samples and then taking the difference in their respective means and dividing by the estimated standard error. If the samples then are asymptotically independent and drawn from a stationary distribution, this will result in a standard normal distribution.

@@ -1,5 +1,5 @@
 <<echo=FALSE>>=
-read_chunk("../code/Problem2.R")
+read_chunk("../code/problem2.R")
 @
 \section{}
 \label{sec:ex2}
