@@ -199,6 +199,63 @@ ggsave("../figures/trace_kappa.pdf", plot = fig_kappa, device = NULL, path = NUL
 
 ## ---- 3b
 # autocorrelation plots
+
+MCMC_acf <- data.frame(
+  lag = acf(v$v1[burnin_step],plot = F)$lag, 
+  v1 = acf(v$v1[burnin_step],plot = F)$acf,
+  v2 = acf(v$v2[burnin_step],plot = F)$acf, 
+  v3 = acf(v$v3[burnin_step],plot = F)$acf,
+  u1 = acf(u$u1[burnin_step],plot = F)$acf,
+  u2 = acf(u$u2[burnin_step],plot = F)$acf, 
+  u3 = acf(u$u3[burnin_step],plot = F)$acf,
+  kappa_u = acf(kappa$kappa_u[burnin_step],plot = F)$acf,
+  kappa_v = acf(kappa$kappa_v[burnin_step],plot = F)$acf
+)
+
+
+fig_3b <- ggarrange(
+  ggplot(MCMC_acf,aes(x = lag, y = v1)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") +
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = v2)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = v3)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = u1)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = u2)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = u3)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = kappa_u)) + rremove("x.text") + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  ggplot(MCMC_acf,aes(x = lag, y = kappa_v)) + 
+    geom_hline(aes(yintercept = 0)) + rremove("xlab") + rremove("ylab") + 
+    geom_segment(aes(xend = lag, yend = 0)),
+  nrow = 8,
+  ncol = 1,
+  labels = c(sprintf("v[m = %d]",r_cols[1]), sprintf("v[m = %d]",r_cols[2]), sprintf("v[m = %d]",r_cols[3]),
+             sprintf("u[m = %d]",r_cols[1]), sprintf("u[m = %d]",r_cols[2]), sprintf("u[m = %d]",r_cols[3])
+             ,sprintf("  kappa_u"),sprintf("  kappa_v")),
+  font.label = list(size = 10, color = "firebrick1"),
+  label.x = 0,
+  label.y = 1,
+  hjust= -1.7,
+  vjust = 1.9
+)
+fig_3b
+
+## ---- break
+ggsave("../figures/acf.pdf", plot = fig_3b, device = NULL, path = NULL,
+       scale = 1, width = 5.5, height = 2*4, units = "in",
+       dpi = 300, limitsize = TRUE)
+
 ## ---- acfv
 v_acf <- data.frame(
   lag = acf(v$v1,plot = F)$lag, 
