@@ -1,3 +1,4 @@
+<<echo=FALSE, cache=FALSE>>=
 read_chunk("../code/problem5.R")
 @
 %
