@@ -11,4 +11,8 @@ In this exercise we will calculate the effective samples size of the precision p
 %
 <<essPrint, echo = FALSE>>==
 @
-%
+%  
+From the print in the code we can see that the effective sample size of $\kappa_u = 1141$ and for $\kappa_v = 4672$ 
+
+
+Now we will look at the relative ESS. This is calculated by dividing the mean of the estimated sample size of $\kappa_u$ and $\kappa_v$ by the time used in to generate the effective samples in the MCMC. 
