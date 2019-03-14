@@ -13,8 +13,8 @@ ess <- effectiveSize(data.frame(MCMC_list$kappa_u[MCMC_list$is_burnin==F],
                                 MCMC_list$kappa_v[MCMC_list$is_burnin==F]))
 ess
 ## ---- break
-save(file = "data/ess4.Rdata", ess)
+save(file = "../code/data/ess4.Rdata", ess)
 ## ---- essPrint
-load("data/ess4.Rdata")
+load("../code/data/ess4.Rdata")
 cat("ESS[kappa_u] =", ess[1])
 cat("ESS[kappa_v] =", ess[2])
