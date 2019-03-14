@@ -8,7 +8,3 @@ In this exercise we will calculate the effective samples size of the precision p
 <<ess, eval=FALSE>>==
 @
 %
-%
-<<essTable, eval=FALSE>>==
-@
-%
