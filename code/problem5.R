@@ -15,12 +15,11 @@ u_med_exp <- function(u){
 # color scheme
 col <- diverge_hcl(8) # blue - red
 pdf(file = "../figures/germany_5a.pdf")
-par(mfrow = c(1,2))
+par(mfcol = c(1,2))
 # standardised mortality rates
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE,main="Standardised mortaility rates",cex.main=1)
 # spatial structured effects
 germany.plot(u_med_exp(samples$u[seq(burnin,M),]), col = col, legend=TRUE,main="Spatial structured effects",cex.main=1)
 
 ## ---- break
-pdf(file = "../figures/germany_5a.pdf")
 dev.off()
