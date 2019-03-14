@@ -29,6 +29,7 @@ cat("ESS[kappa_v] =", ess[8])
 load("../code/data/samples.Rdata")
 time <- as.numeric(samples$run_time[1])
 relESS <- mean(c(ess[7],ess[8]))/time
+relESS
 ## ---- break
 save(file = "../code/data/ress.Rdata",relESS)
 ## ---- rESSprint
