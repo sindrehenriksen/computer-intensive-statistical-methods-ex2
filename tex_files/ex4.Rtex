@@ -16,3 +16,13 @@ From the print in the code we can see that the effective sample size of $\kappa_
 
 
 Now we will look at the relative ESS. This is calculated by dividing the mean of the estimated sample size of $\kappa_u$ and $\kappa_v$ by the time used in to generate the effective samples in the MCMC. 
+%
+<<relESS, eval = FALSE>>==
+@
+%  
+
+%
+<<rESSprint, echo = FALSE>>==
+@
+%  
+In other words our MCMC algorithm generates $\approx5.1$ effective samples per second. 
