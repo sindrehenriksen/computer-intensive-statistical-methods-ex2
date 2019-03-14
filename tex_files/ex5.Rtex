@@ -1,2 +1,17 @@
+read_chunk("../code/problem5.R")
+@
+%
 \section{}
 \label{sec:ex5}
+%
+<<5, eval=FALSE>>==
+@
+%
+%
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/germany_5a.pdf}
+    \caption{}
+    \label{fig:germany_5}
+\end{figure}
+%
