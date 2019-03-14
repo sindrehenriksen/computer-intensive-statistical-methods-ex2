@@ -1,8 +1,8 @@
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
-library(tidyverse)
+
+## ---- 5
 library(spam)
-library(ggpubr)
 library(colorspace)
 load("data/input.Rdata")
 load("data/samples.Rdata")
@@ -12,6 +12,7 @@ u_med_exp <- function(u){
   temp_median = apply(u,2, median, na.rm = TRUE)
   posterior = exp(temp_median)
 }
+# color scheme
 col <- diverge_hcl(8) # blue - red
 pdf(file = "../figures/germany_5a.pdf")
 par(mfrow = c(1,2))
@@ -19,4 +20,7 @@ par(mfrow = c(1,2))
 germany.plot(Oral$Y/Oral$E, col=col, legend=TRUE,main="Standardised mortaility rates",cex.main=1)
 # spatial structured effects
 germany.plot(u_med_exp(samples$u[seq(burnin,M),]), col = col, legend=TRUE,main="Spatial structured effects",cex.main=1)
+
+## ---- break
+pdf(file = "../figures/germany_5a.pdf")
 dev.off()
