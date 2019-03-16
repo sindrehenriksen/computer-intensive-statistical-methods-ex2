@@ -141,7 +141,7 @@ save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
 load("../code/data/geweke_diag.Rdata")
 kable(geweke_diag)
 
-## break
+## ---- break
 u_z_scores <- geweke.diag(samples$u,frac1 = 0.1,frac2 = 0.5)$z
 u_p_value_df <- enframe(2*pnorm(abs(u_z_scores),lower.tail = FALSE))
 ggplot(u_p_value_df) + 
@@ -159,3 +159,6 @@ ggplot(v_p_value_df) +
                  colour = "white",
                  fill = "cornflowerblue"
   ) 
+
+
+
