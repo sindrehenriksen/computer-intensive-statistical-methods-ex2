@@ -12,7 +12,7 @@ read_chunk("../code/problem5.R")
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figures/germany_5a.pdf}
-    \caption{}
+    \caption{The plot on the left side is the standardised mortality rates, and on the right side we have the spatial structured effect of oral cavity cancer mortality rates.}
     \label{fig:germany_5}
 \end{figure}
 %

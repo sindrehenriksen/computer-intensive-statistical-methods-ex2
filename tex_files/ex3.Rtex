@@ -43,5 +43,26 @@ Using the same samples we will now look at their autocorrelation. We will do thi
 \end{figure}
 %
 In figure \ref{fig:acf} we can see that the autocorrelation for the $\vect{u}$s' and the $\vect{v}$s' is close to uncorrelated, but for $\kappa_u$ and $\kappa_v$ we can see a larger degree of autocorrelation. 
+
 \paragraph{(c)}
-Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. A geweke diagnostic is done by removing the burn-in, then taking the first $10\%$ and the last $50\%$ of the samples of the parameters, and then taking the difference in their respective means and dividing by the estimated standard error. If the samples then are asymptotically independent and drawn from a stationary distribution, this will result in a standard normal distribution.
+Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. Geweke's diagnostic is done by comparing the location of the sampled parameter on two different time intervals. Usually one compares the last half of the chain with some smaller part in the start of the chain. We have chosen the first part to be $10\%$ of the first part of the chain and the last interval to be $50\%$ of the last part of the chain. Let first interval of a parameter be $\theta_A$ of length $n_A$, with the mean $\bar{\Theta}_A$ and the standard error $s_A$. And the last interval be $\Theta_B$ of length $n_B$, with mean $\bar{\Theta}_B$ and standard error $s_B$. Then the Geweke's statistics is given by Equation \eqref{eq:z-statistics}.
+
+\begin{equation}
+    Z_{\Theta} = \frac{\bar{\Theta}_A-\bar{\Theta}_B}{\sqrt{\frac{S_A}{n_A}+\frac{s_B}{n_B}}}
+    \label{eq:z-statistics}
+\end{equation}
+
+If the samples then are asymptotically independent and drawn from the stationary distribution of the chain, the Geweke's statistic will be normally distributed, $\N(0,1)$, and the p-value of which is given by the equation
+\begin{equation*}
+    p\textrm{-value} = P(|Z| \geq |z|).
+\end{equation*}
+
+This mean that we can test the convergence of the chain on the p-values of the z-statistics. We can then perform a hypothesis test given by
+\begin{equation}
+    \mathrm{H}_0: P(|Z| \geq |z| ) > 0.05
+    vs. \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
+\end{equation}
+with the chosen significance level of $0.05$. We could also chose values of $z$ for which the Geweke's statistic needs to be within and use this as significance level. 
+We calculated the Geweke diagnostic with the code, removing the burnin from the chain before. 
+<<3c, eval = FALSE>>==
+<<tableGweke, echo = FALSE>>==
