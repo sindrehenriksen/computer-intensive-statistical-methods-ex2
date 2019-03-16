@@ -1,4 +1,4 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 ## ---- libs2
@@ -104,26 +104,35 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 
 ## ---- myMCMC
 # running MCMC simulation
+# returns a list of eta, u, kappa_u, kappa_v, and the acceptance prob
 M <- 70000
 myMCMC <- function(input, M){
+  # for keeping track of completition
   pb <- txtProgressBar(min = 0, max = M, style = 3)
   # choosing kappa from the prior
   kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
   kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-  # choosing u around the mean
+  # chosen u
   u = rep(0.0, input$n)
+  # eta from proposal density
   eta <- r_eta_prop(input,u,u,kappa_v)
+  # storing all etas,vs, kappas and the acceptance prob
   eta_samples <- matrix(NA,nrow=M,ncol=input$n)
   u_samples <- matrix(NA,nrow=M,ncol=input$n)
   kappa_u_samples <- vector(length = M)
   kappa_v_samples <- vector(length = M)
   accept_vec <- vector(length = M)
   for (i in seq(1,M)){
+    # for keeping track of completition
     setTxtProgressBar(pb, i)
+    # drawing kappas
     kappa_u = r_kappa_u(input,u)
     kappa_v = r_kappa_v(input,eta,u)
+    # drawin u
     u = r_u(input,kappa_u,kappa_v,eta)
+    # drawing eta
     eta_prop = r_eta_prop(input,eta,u,kappa_v)
+    # cacluating acceptance
     accept_vec <- c(accept_vec, acceptance_prob(input,eta_prop,eta,kappa_v,u))
     if(runif(1) < accept_vec[i]){
       eta = eta_prop
@@ -143,7 +152,10 @@ myMCMC <- function(input, M){
 }
 
 ## ---- res2
+# runs the MCMC and stores the time it took
 run_time <- system.time(samples <- myMCMC(input, M))
+# adding runtime to the list from MCMC
 samples$run_time = run_time
+# saving for use in other code
 save(samples,file = "data/samples.Rdata")
 save(input,file ="data/input.Rdata")

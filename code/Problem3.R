@@ -1,4 +1,4 @@
-#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 rm(list = ls())
 
 # this is the solution to excercise 3
@@ -32,7 +32,7 @@ MCMC_list <- data.frame(
 save(MCMC_list,file = "data/mcmc_df.Rdata")
 
 ## ---- 3a
-# trace plots
+# trace plots with burn in removed
 fig_3a <- ggarrange(
   ggplot(MCMC_list[burnin_step,], aes(x = steps, y = v1, color = is_burnin)) + 
     geom_line(color = "grey24") + rremove("x.text") + rremove("xlab") + rremove("ylab"),
@@ -69,8 +69,7 @@ ggsave("../figures/trace.pdf", plot = fig_3a, device = NULL, path = NULL,
        dpi = 300, limitsize = TRUE)
 
 ## ---- 3b
-# autocorrelation plots
-
+# autocorrelation plots with burn in removed
 MCMC_acf <- data.frame(
   lag = acf(MCMC_list$kappa_v[burnin_step],plot = F,lag.max = 200)$lag, 
   v1 = acf(MCMC_list$v1[burnin_step],plot = F,lag.max = 200)$acf,
@@ -130,14 +129,19 @@ ggsave("../figures/acf.pdf", plot = fig_3b, device = NULL, path = NULL,
 
 ## ---- 3c
 library(coda)
-z_scores <- geweke.diag(MCMC_list[,-1], frac1=0.1, frac2=0.5)$z
+z_scores <- geweke.diag(MCMC_list[burnin_step,2:9], frac1=0.1, frac2=0.5)$z
 geweke_diag <- data.frame(
   params = names(z_scores),
   z_scores = z_scores,
   p_values = 2*pnorm(abs(z_scores),lower.tail = FALSE)
 )
-summary(geweke_diag)
+## ---- break
+save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
+## ---- tableGweke
+load("../code/data/geweke_diag.Rdata")
+kable(geweke_diag)
 
+## break
 u_z_scores <- geweke.diag(samples$u,frac1 = 0.1,frac2 = 0.5)$z
 u_p_value_df <- enframe(2*pnorm(abs(u_z_scores),lower.tail = FALSE))
 ggplot(u_p_value_df) + 
