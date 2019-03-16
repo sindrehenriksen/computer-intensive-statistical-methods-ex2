@@ -138,8 +138,9 @@ geweke_diag <- data.frame(
 ## ---- break
 save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
 ## ---- tableGweke
+library(kableExtra)
 load("../code/data/geweke_diag.Rdata")
-kable(geweke_diag)
+kable(geweke_diag,"\\label{tab:geweke}Result of Geweke diagnostic of the paramameters.",booktabs = T) 
 
 ## ---- break
 u_z_scores <- geweke.diag(samples$u,frac1 = 0.1,frac2 = 0.5)$z
