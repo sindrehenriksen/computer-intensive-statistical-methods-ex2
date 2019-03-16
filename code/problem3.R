@@ -131,7 +131,6 @@ ggsave("../figures/acf.pdf", plot = fig_3b, device = NULL, path = NULL,
 library(coda)
 z_scores <- geweke.diag(MCMC_list[burnin_step,2:9], frac1=0.1, frac2=0.5)$z
 geweke_diag <- data.frame(
-  params = names(z_scores),
   z_scores = z_scores,
   p_values = 2*pnorm(abs(z_scores),lower.tail = FALSE)
 )
@@ -140,7 +139,7 @@ save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
 library(kableExtra)
 ## ---- tableGweke
 load("../code/data/geweke_diag.Rdata")
-kable(geweke_diag,"\\label{tab:geweke}Result of Geweke diagnostic of the paramameters.",booktabs = T) 
+kable(geweke_diag,caption = "Result of Gweke Statistic on the parameters",booktabs = T) 
 
 ## ---- break
 u_z_scores <- geweke.diag(samples$u,frac1 = 0.1,frac2 = 0.5)$z
