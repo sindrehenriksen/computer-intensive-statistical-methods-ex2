@@ -63,6 +63,6 @@ This mean that we can test the convergence of the chain on the p-values of the z
     vs. \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
 \end{equation}
 with the chosen significance level of $0.05$. We could also chose values of $z$ for which the Geweke's statistic needs to be within and use this as significance level. 
-We calculated the Geweke diagnostic with the code, removing the burnin from the chain before. 
+We calculated the Geweke diagnostic with the code, removing the burnin from the chain. 
 <<3c, eval = FALSE>>==
 <<tableGweke, echo = FALSE>>==
