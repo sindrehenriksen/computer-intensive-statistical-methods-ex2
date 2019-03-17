@@ -15,7 +15,7 @@ u_med_exp <- function(u){
 # color scheme
 col <- diverge_hcl(8) # blue - red
 pdf(file = "../figures/germany_5a.pdf")
-par(mfcol = c(1,2))
+par(mfrow = c(1,2))
 # standardised mortality rates
 germany.plot(Oral$Y/Oral$E, 
              col=col, 

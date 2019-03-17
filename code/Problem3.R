@@ -128,6 +128,7 @@ ggsave("../figures/acf.pdf", plot = fig_3b, device = NULL, path = NULL,
 
 
 ## ---- 3c
+
 library(coda)
 library(kableExtra)
 z_scores <- geweke.diag(MCMC_list[,2:9], frac1=0.1, frac2=0.5)$z
@@ -152,21 +153,23 @@ testBurningGeweke <- function(MCMC_list, M){
   for (i in seq(1,11)){
     burnin[i] = 500*(i-1)
     z_score<-geweke.diag(MCMC_list[seq(burnin[i],M),2:9], frac1=0.1, frac2=0.5)$z
-    burn = c(burn,rep(burnin,8))
+    burn = c(burn,rep(burnin[i],8))
     z = c(z,as.vector(z_score))
     z_name = c(z_name,names(z_score))
   }
   return(data.frame(burnin = burn, z_statistic = z, Parameter = z_name))
 }
 z_scores_burnin<-testBurningGeweke(MCMC_list, M)
-ggplot()+
+burnin_test_plot<-ggplot()+
   geom_point(data= z_scores_burnin,aes(x=z_statistic,y=burnin,color=Parameter)) +
   geom_rect(aes(xmin=-1.6,xmax = 1.6, ymin=-100,ymax=5100 ), fill = "blue",alpha = 0.2)+ 
-  ylab("burnin")+
+  ylab("Burn-in")+
   xlab("Z-statistic")+
-  labs(colour="Parameter")
+  labs(colour="Parameter")+
+  xlim(c(-2,2))
+burnin_test_plot
 ## ---- break
-ggsave("../figures/test_burnin.pdf", plot = fig_3b, device = NULL, path = NULL,
+ggsave("../figures/test_burnin.pdf", plot = burnin_test_plot, device = NULL, path = NULL,
        scale = 1, width = 5.5, height = 2*4, units = "in",
        dpi = 300, limitsize = TRUE)
   
