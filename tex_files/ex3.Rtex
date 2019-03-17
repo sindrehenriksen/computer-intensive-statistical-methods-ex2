@@ -63,6 +63,17 @@ This mean that we can test the convergence of the chain on the p-values of the z
     vs. \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
 \end{equation}
 with the chosen significance level of $0.05$. We could also chose values of $z$ for which the Geweke's statistic needs to be within and use this as significance level. 
-We calculated the Geweke diagnostic with the code, removing the burnin from the chain. 
+We calculated the Geweke diagnostic with the code, removing the burn-in from the chain. 
 <<3c, eval = FALSE>>==
 <<tableGweke, echo = FALSE>>==
+From the table returned from the code we see that the hypothesis $mathrm{H}_0$ holds, which mean that the chain has converged with a burn-in of $5000$. We can also look at the size of the burn-in and at which size the hypothesis fails to hold. This we did by plotting the  z-Statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
+
+<<plotgeweke, echo = FALSE>>==
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/test_burnin.pdf}
+    \caption{}
+    \label{fig:test_burnin}
+\end{figure}
+
+From figure \ref{fig:test_burnin} we can see that doing this test on these samples doesn't tell us whether or not the data set has converged. This is because even with no burn-in the Geweke diagnostic is within the interval of which the hypothesis holds. If the sample size where smaller $n_A$ and $n_B$ would be smaller which would make $\bar{\Theta}_A$ diverge more from $\bar{\Theta}_B$. We can therefore conclude that this is not a good test in our case. 
