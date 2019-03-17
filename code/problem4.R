@@ -15,15 +15,8 @@ ess
 save(file = "../code/data/ess4.Rdata", ess)
 ## ---- essPrint
 load("../code/data/ess4.Rdata")
-cat("ESS[v1] =", ess[1])
-cat("ESS[v2] =", ess[2])
-cat("ESS[v3] =", ess[3])
-cat("ESS[u1] =", ess[4])
-cat("ESS[u2] =", ess[5])
-cat("ESS[u3] =", ess[6])
-cat("ESS[kappa_u] =", ess[7])
-cat("ESS[kappa_v] =", ess[8])
-
+kable(ess,caption = "Effective sample size
+      of the parameters",booktabs = T) 
 
 ## ---- relESS
 load("../code/data/samples.Rdata")

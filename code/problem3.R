@@ -192,7 +192,7 @@ testBurningGeweke <- function(MCMC_list, M){
 z_scores_burnin<-testBurningGeweke(MCMC_list, M)
 burnin_test_plot<-ggplot()+
   geom_point(data= z_scores_burnin,
-             aes(x=z_statistic,y=burnin,color=Parameter)) +
+             aes(x=z_statistic,y=burnin,color=Parameter),size=2)+
   geom_rect(aes(xmin=-1.6,xmax = 1.6, ymin=-100,ymax=5100 ), 
             fill = "blue",alpha = 0.2)+ 
   ylab("Burn-in")+
