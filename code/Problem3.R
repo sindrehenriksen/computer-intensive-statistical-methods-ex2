@@ -64,8 +64,8 @@ fig_3a <- ggarrange(
              sprintf("v[m = %d]",r_cols[3]),
              sprintf("u[m = %d]",r_cols[1]), 
              sprintf("u[m = %d]",r_cols[2]), 
-             sprintf("u[m = %d]",r_cols[3])
-             ,"kappa_u","kappa_v"),
+             sprintf("u[m = %d]",r_cols[3]),
+             sprintf("  kappa_u"),sprintf("  kappa_v")),
   font.label = list(size = 10, color = "firebrick1"),
   label.x = 0,
   label.y = 1,
@@ -162,13 +162,13 @@ geweke_diag <- data.frame(
   p_values = 2*pnorm(abs(z_scores),lower.tail = FALSE)
 )
 kable(geweke_diag,caption = 
-        "Result of Gweke Statistic on the parameters",
+        "\\label{tab:geweke}Result of Gweke Statistic on the parameters",
       booktabs = T) 
 ## ---- break
 save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
 ## ---- tableGweke
 load("../code/data/geweke_diag.Rdata")
-kable(geweke_diag,caption = "Result of Gweke Statistic on the parameters",booktabs = T) 
+kable(geweke_diag,caption = "\\label{tab:geweke}Result of Gweke Statistic on the parameters",booktabs = T) 
 
 ## ---- break
 ## ---- plotgeweke
@@ -194,7 +194,7 @@ burnin_test_plot<-ggplot()+
   geom_point(data= z_scores_burnin,
              aes(x=z_statistic,y=burnin,color=Parameter),size=2)+
   geom_rect(aes(xmin=-1.6,xmax = 1.6, ymin=-100,ymax=5100 ), 
-            fill = "blue",alpha = 0.2)+ 
+            fill = "blue",alpha = 0.1)+ 
   ylab("Burn-in")+
   xlab("Z-statistic")+
   labs(colour="Parameter")+
