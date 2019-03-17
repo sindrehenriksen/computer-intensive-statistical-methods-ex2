@@ -170,6 +170,6 @@ burnin_test_plot<-ggplot()+
 burnin_test_plot
 ## ---- break
 ggsave("../figures/test_burnin.pdf", plot = burnin_test_plot, device = NULL, path = NULL,
-       scale = 1, width = 5.5, height = 2*4, units = "in",
+       scale = 1, width = 8, height = 8, units = "in",
        dpi = 300, limitsize = TRUE)
   
