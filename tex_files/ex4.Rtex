@@ -14,7 +14,7 @@ With this we can calculate the ESS with the Equation \ref{eq:ESS}.
     \textrm{ESS} = \frac{N}{\tau}
     \label{eq:ESS}
 \end{equation}
-To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{coda}, shown in the code bellow and the results are displayed in the table. 
+To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{coda}, shown in the code bellow and the results are displayed in the Table 2. 
 %
 <<ess, eval=FALSE>>==
 @
@@ -23,7 +23,8 @@ To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{c
 <<essPrint, echo = FALSE>>==
 @
 %  
-From the print in the code we can see that the effective sample size of $\kappa_u = 1141$ and for $\kappa_v = 4672$ 
+From Table 2 we can see that the effective sample size or the independent samples is for $\kappa_u = 1141$ and for $\kappa_v = 4672$. The other parameters have a rather large effective sample size that is close to all the samples or the same as the sample size of $M = 65000$. We can also see from figure \ref{fig:acf} that the lag for $\kappa_u$ and $\kappa_v$ needs to be much larger before the samples could be considered to be independent. 
+A method that could be used to improve the effective sample size is a block update of all the parameters. This means that with the acceptance or rejection of the proposal of $\eta$, the parameters are update or not updated also. A drawback of this model is that you might lose good values of the other variables. 
 
 
 Now we will look at the relative ESS. This is calculated by dividing the mean of the estimated sample size of $\kappa_u$ and $\kappa_v$ by the time used to generate the effective samples in the MCMC. 
@@ -31,9 +32,9 @@ Now we will look at the relative ESS. This is calculated by dividing the mean of
 <<relESS, eval = FALSE>>==
 @
 %  
-
 %
 <<rESSprint, echo = FALSE>>==
 @
 %  
-In other words our MCMC algorithm generates $\approx5.1$ effective samples per second. 
+In other words our MCMC algorithm generates $\approx5.1$ effective samples per second.
+In our case this might not be that usefull, but if we were to change the implementation of the MCMC, we could compare the relative sample size of our two implementations to see if the change was better for our model or not. As if we were to implement a block update model, this might affect the run time, and by looking at the relative sample size value we could determine if the change would be good. 
