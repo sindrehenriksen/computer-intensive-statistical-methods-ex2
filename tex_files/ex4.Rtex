@@ -4,7 +4,17 @@ read_chunk("../code/problem4.R")
 %
 \section{}
 \label{sec:ex4}
-In this exercise we will calculate the effective samples size of the precision parameter $\kappa_u$ and  $\kappa_v$ that we have sampled.
+In this exercise we will calculate the effective samples size(ESS) of the precision parameters $\kappa_u$ and  $\kappa_v$. This is an estimate of the number of independent sample, using the autocorrelations, that we generated with out MCMC algorithm. The autocorrelation-time is given by Equation \ref{eq:autotime}, where $k$ is the lag, which is the number of samples used, and $\rho(k)$ is the autocorrelation at lag $k$.
+\begin{equation}
+    \tau = 1 + 2\sum\limits_{k=1}^\infty \rho(k)
+    \label{eq:autotime}
+\end{equation}
+With this we can calculate the ESS with the Equation \ref{eq:ESS}.
+\begin{equation}
+    \textrm{ESS} = \frac{N}{\tau}
+    \label{eq:ESS}
+\end{equation}
+To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{coda}, shown in the code bellow and the results are displayed in the table. 
 %
 <<ess, eval=FALSE>>==
 @
