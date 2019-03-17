@@ -4,6 +4,7 @@ read_chunk("../code/problem5.R")
 %
 \section{}
 \label{sec:ex5}
+Now we look at the results of our MCMC algorithm. We will do this by plotting the exponential of the posterior median of $\vect{u}$ the spatial structure component with the burn-in removed, which means $\textrm{median}(exp(\vect{u}))$. In figure \ref{fig:germany_5} we see the standardised mortality rates given by our data $y_i/E_i$ and the spatial structured effect. 
 %
 <<5, eval=FALSE>>==
 @
@@ -12,7 +13,7 @@ read_chunk("../code/problem5.R")
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figures/germany_5a.pdf}
-    \caption{The plot on the left side is the standardised mortality rates, and on the right side we have the spatial structured effect of oral cavity cancer mortality rates.}
+    \caption{The plot on the left side is the standardised mortality rates, and on the right side we have the spatial structured effect of oral cavity cancer mortality rates. Low values of mortality rates are blue and high values are red.}
     \label{fig:germany_5}
 \end{figure}
 %
