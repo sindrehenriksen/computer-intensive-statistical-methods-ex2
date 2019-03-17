@@ -64,11 +64,18 @@ This mean that we can test the convergence of the chain on the p-values of the z
 \end{equation}
 with the chosen significance level of $0.05$. We could also chose values of $z$ for which the Geweke's statistic needs to be within and use this as significance level. 
 We calculated the Geweke diagnostic with the code, removing the burn-in from the chain. 
+%
 <<3c, eval = FALSE>>==
+@
+%
 <<tableGweke, echo = FALSE>>==
+@
+%
 From the table returned from the code we see that the hypothesis $mathrm{H}_0$ holds, which mean that the chain has converged with a burn-in of $5000$. We can also look at the size of the burn-in and at which size the hypothesis fails to hold. This we did by plotting the  z-Statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
-
-<<plotgeweke, echo = FALSE>>==
+%
+<<plotgeweke, eval = FALSE>>==
+@
+%
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figures/test_burnin.pdf}
