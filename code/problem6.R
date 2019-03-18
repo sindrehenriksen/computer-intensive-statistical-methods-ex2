@@ -40,7 +40,7 @@ result_a = inla(formula, family="poisson", data=data, E=E,
 # Plot median of posterior divided by E in map
 # (Y/E = E*exp(eta)/E = exp(eta))
 y_median_a = exp(result_a$summary.random$region_struct$`0.5quant`)
-pdf("../figures/y_median_a.pdf")
+pdf("../figures/y_median_a.pdf",width = 4, height = 4)
 germany.plot(y_median_a, col=col, legend=TRUE)
 dev.off()
 
