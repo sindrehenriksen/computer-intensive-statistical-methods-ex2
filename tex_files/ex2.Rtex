@@ -21,7 +21,7 @@ First we look at the full conditional of $\kappa_u$, given by $p(\kappa_u\given\
 <<r_kappa_u, eval=FALSE>>=
 @
 %
-The full conditional of $\kappa_v$, given by $p(\kappa_v\given\vect{y}, \kappa_u^{m},\vect{\eta}^{(m-1)}, \vect{u}^{(m-1)})$, which has the distribution given in Equation \eqref{eq:fc_kappa_v}. The samples of $\kappa_v$ is generated in the function \texttt{r\_kappa\_v}.
+The full conditional of $\kappa_v$, given by $p(\kappa_v\given\vect{y}, \kappa_u^{m},\vect{\eta}^{(m-1)}, \vect{u}^{(m-1)})$, which has the distribution given in Equation \eqref{eq:fc_kappa_v}. The samples of $\kappa_v$ are generated in the function \texttt{r\_kappa\_v}.
 %
 <<r_kappa_v, eval=FALSE>>=
 @
@@ -31,12 +31,12 @@ To draw samples from of $\vect{u}$ we use the the distribution of the full condi
 <<r_u, eval=FALSE>>=
 @
 %
-The proposal samples $\vect{\eta}^*$ is drawn from the approximation of the posterior full conditional for $\vect{\eta}$ found in Equation \eqref{eq:eta_fc_approx}. In the proposal density $q(\vect{\eta}^* \given\vect{z},\vect{y},\vect{u}^{(m)},\kappa_u^{(m)},\kappa_v^{(m)})$ we used the approximation around $\vect{z} = \vect{\eta}^{(m-1)}$. From this we implemented the function,  \texttt{r\_eta\_prop}, which generates a proposal sample. %\todo{comment on the use of metropolis-hastings}
+The proposal samples $\vect{\eta}^*$ is drawn from the approximation of the posterior full conditional for $\vect{\eta}$ found in Equation \eqref{eq:eta_fc_approx}. In the proposal density \newline $q(\vect{\eta}^* \given\vect{z},\vect{y},\vect{u}^{(m)},\kappa_u^{(m)},\kappa_v^{(m)})$ we used the approximation around $\vect{z} = \vect{\eta}^{(m-1)}$. From this we implement the function,  \texttt{r\_eta\_prop}, which generates a proposal sample. %\todo{comment on the use of metropolis-hastings}
 %
 <<r_eta_prop, eval=FALSE>>=
 @
 %
-Whether or not the proposal $\vect{\eta}^*$ is accepted or not, is determined by the acceptance probability,
+Whether or not the proposal $\vect{\eta}^*$ is accepted, is determined by the acceptance probability
 
 \begin{equation*}
     \alpha = \min\left(1,
@@ -53,7 +53,7 @@ Whether or not the proposal $\vect{\eta}^*$ is accepted or not, is determined by
     \right).
     \label{eq:accept_prob}
 \end{equation*}
-If the proposal is accepted $\vect{\eta}^{(m)} = \vect{\eta}^*$, and if not $\vect{\eta}^{(m)} = \vect{\eta}^{(m-1)}$. To help with the calculation of the acceptance probability we created two function, \texttt{d\_eta\_p} and \texttt{d\_eta\_q}, that returns p-values of the posterior density $p(\eta\given...)$ and the proposal density $q(\eta\given....)$. All these probability calculations are done in log scale.
+If the proposal is accepted $\vect{\eta}^{(m)} = \vect{\eta}^*$, and if not $\vect{\eta}^{(m)} = \vect{\eta}^{(m-1)}$. To help with the calculation of the acceptance probability we create two functions, \texttt{d\_eta\_p} and \texttt{d\_eta\_q}, that return p-values of the posterior density $p(\eta\given...)$ and the proposal density $q(\eta\given....)$. All these probability calculations are done in log scale.
 %
 <<d_eta_p, eval=FALSE>>=
 @
@@ -67,13 +67,13 @@ If the proposal is accepted $\vect{\eta}^{(m)} = \vect{\eta}^*$, and if not $\ve
 <<acceptance_prob, eval=FALSE>>=
 @
 %
-All the components is now implement, and we can create the MCMC-algorithm.
-The initial conditions for $\kappa_u$ and $\kappa_v$ is drawn from their prior distributions $\kappa_u \sim \G(\alpha_u,\beta_u)$ and $\kappa_v \sim \G(\alpha_v,\beta_v)$, using the R function \texttt{rgamma}. The initial condition $\vect{u} = \vect{0}$  is used to sample the initial proposal. To accept or reject a proposal $\vect{\eta}^*$, we draw from $x \sim \U[0,1]$, and accept if the $x \leq \textrm{acceptance}$. The function \texttt{myMCMC} returns a list containing $\vect{\eta}$-, $\vect{u}$-, $\kappa_u$- and $\kappa_v$-samples and a vector of acceptance probabilities.
+All the components are now implement, and we can create the MCMC-algorithm.
+The initial condition for $\kappa_v$ we use the mean of what we have observed to be the mean after we have run an simulation, and therefore  $\kappa_v = 180$. The initial condition of $\vect{u}$ is sampled from a uniform distribution $\vect{u} = \U[0,1]$. These values are used to sample the initial proposal of $\vect{\eta}$. To accept or reject a proposal $\vect{\eta}^*$, we draw from $x \sim \U[0,1]$, and accept if the $x \leq \textrm{acceptance}$. The function \texttt{myMCMC} returns a list containing $\vect{\eta}$-, $\vect{u}$-, $\kappa_u$- and $\kappa_v$-samples and a vector of acceptance probabilities.
 %
 <<myMCMC, eval=FALSE>>=
 @
 %
-To get the running time of our MCMC-algorithm we used the R function \texttt{system.time} on the function call and stored this in the list \textit{samples} returned from the \texttt{myMCMC} function. The list is then saved along with the \textit{input}-list declared above to save computation time in later exercises.
+To get the running time of our MCMC-algorithm we used the R function \newline\texttt{system.time} on the function call and stored this in the list \textit{samples} returned from the \texttt{myMCMC} function. The list is then saved along with the \textit{input}-list declared above to save computation time in later exercises.
 
 %
 <<res2, eval=FALSE>>=
