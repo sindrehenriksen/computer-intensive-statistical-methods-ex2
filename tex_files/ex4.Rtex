@@ -14,7 +14,7 @@ With this we can calculate the ESS with the Equation \ref{eq:ESS}.
     \textrm{ESS} = \frac{N}{\tau}
     \label{eq:ESS}
 \end{equation}
-To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{coda}, shown in the code bellow and the results are displayed in the Table \ref{tab:ess}. 
+To calculate the ESS we used \texttt{effectiveSize} from the R-package \textbf{coda}, shown in the code bellow and the results is displayed in the Table \ref{tab:ess}. 
 %
 <<ess, eval=FALSE>>==
 @
@@ -36,5 +36,5 @@ Now we will look at the relative ESS. This is calculated by dividing the mean of
 <<rESSprint, echo = FALSE>>==
 @
 %  
-In other words our MCMC algorithm generates $\approx1.53$ effective samples per second.
-In our case this might not be that usefull, but if we were to change the implementation of the MCMC, we could compare the relative sample size of our two implementations to see if the change was better for our model or not. As if we were to implement a block update model, this might affect the run time, and by looking at the relative sample size value we could determine if the change would be good. 
+In other words our MCMC-algorithm generates $\approx2.37$ effective samples per second.
+In our case this might not be that useful, but if we were to change the implementation of the MCMC, we could compare the relative sample size of our two implementations to see if the change was better for our model or not. As if we were to implement a block update model, this might affect the run time, and by looking at the relative sample size value we could determine if the change would be good. 
