@@ -6,7 +6,7 @@ read_chunk("../code/problem3.R")
 In exercise 2 we have run an MCMC-algorithm and generated $M = 70000$ samples. In this exercise we will look at these results and determine the goodness of our MCMC algorithm and potential improvements
 First we define the libraries we used.
 %
-<<libs2, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
+<<libs3, eval = FALSE, fig.align='center', fig.width=6, fig.height=4, fig.cap="fig caption">>==
 @
 %
 To create the figures we used \texttt{ggplot} from the \textit{tidyverse} package.
@@ -17,7 +17,7 @@ From the samples of $\vect{\eta}$ we can calculate the samples of $\vect{v}$ by 
 %
 %
 \paragraph{(a)}
-To start out we look at trace plots with a chosen burn in period removed. The size of the burn-in is chosen by looking at the trace plots in figure \ref{fig:trace}, and we used $5000$. 
+To start out we look at trace plots with a chosen burn in period removed. The size of the burn-in is chosen by looking at the trace plots in figure \ref{fig:trace}, and we chose $10000$. 
 <<3a, eval = FALSE>>==
 @
 %
@@ -28,7 +28,7 @@ To start out we look at trace plots with a chosen burn in period removed. The si
     \label{fig:trace}
 \end{figure}
 
-Looking at the trace plots for the three different parameters for $\vect{u}$ and $\vect{v}$ in figure \ref{fig:trace}, we see that the parameters explore much of the domain, and look like a band. This is a good indication of convergence of the MCMC. $\kappa_u$ seem to explore less of the domain than any of the other, and rarely moves far away from its mean. $\kappa_v$ has close to a bind like structure, but looks like explores more higher values than its mean than lower values. Also we see the mean of the $\vect{v}$ components is close to zero which is what we should expect for white noise. 
+Looking at the trace plots for the three different parameters for $\vect{u}$ and $\vect{v}$ in figure \ref{fig:trace}, we see that the parameters explore much of the domain, and look like a band. This is a good indication of convergence of the MCMC. $\kappa_u$ and $\kappa_v$ seem to explore less of the domain, and they tend to explore more higher values than the mean than smaller values. Also we see the mean of the $\vect{v}$ components is close to zero which is what we should expect for white noise. 
 \paragraph{(b)}
 Using the same samples we will now look at their autocorrelation. We will do this by using the R-function \texttt{acf}, which we create autocorrelation plots of the different samples.  
 %
@@ -42,10 +42,10 @@ Using the same samples we will now look at their autocorrelation. We will do thi
     \label{fig:acf}
 \end{figure}
 %
-In figure \ref{fig:acf} we can see that the autocorrelation for $\vect{u}$ and $\vect{v}$ is close to uncorrelated, but for $\kappa_u$ and $\kappa_v$ we can see a larger degree of autocorrelation. $\kappa_v$ is close to independent around a lag of size $50$ and $\kappa_u$ needs almost a lag of $100$ to be independent. 
+In figure \ref{fig:acf} we can see that the autocorrelation for $\vect{v}$ is close to uncorrelated, but we can see that for the $\vect{u}$ components there is a small autocorrelation for small lags and they look to be independent around lag$\approx20$. On the other hand $\kappa_u$ and $\kappa_v$ we can see a larger degree of autocorrelation. $\kappa_v$ is close to independent around a lag of size $70$ and $\kappa_u$ needs almost a lag of $150$ to be independent. 
 
 \paragraph{(c)}
-Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. Geweke's diagnostic is done by comparing the location of the sampled parameter on two different time intervals. Usually one compares the last half of the chain with some smaller part in the start of the chain. We have chosen the first part to be $10\%$ of the first part of the chain and the last interval to be $50\%$ of the last part of the chain. Let first interval of a parameter be $\theta_A$ of length $n_A$, with the mean $\bar{\Theta}_A$ and the standard error $s_A$. And the last interval be $\Theta_B$ of length $n_B$, with mean $\bar{\Theta}_B$ and standard error $s_B$. Then the Geweke's statistics is given by Equation \eqref{eq:z-statistics}.
+Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. Geweke's diagnostic is done by comparing the location of the sampled parameter on two different time intervals. Usually one compares the last half of the chain with some smaller part in the start of the chain. We have chosen the first part to be $10\%$ of the start of the chain after the burn-in and the last interval to be $50\%$ of the last part of the chain. Let first interval of a parameter be $\theta_A$ of length $n_A$, with the mean $\bar{\Theta}_A$ and the standard error $s_A$. And the last interval be $\Theta_B$ of length $n_B$, with mean $\bar{\Theta}_B$ and standard error $s_B$. Then the Geweke's statistics is given by Equation \eqref{eq:z-statistics}.
 
 \begin{equation}
     Z_{\Theta} = \frac{\bar{\Theta}_A-\bar{\Theta}_B}{\sqrt{\frac{S_A}{n_A}+\frac{s_B}{n_B}}}
@@ -60,9 +60,9 @@ If the samples then are asymptotically independent and drawn from the stationary
 This mean that we can test the convergence of the chain on the p-values of the z-statistics. We can then perform a hypothesis test given by
 \begin{equation}
     \mathrm{H}_0: P(|Z| \geq |z| ) > 0.05
-    vs. \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
+    \enspace vs.\enspace \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
 \end{equation}
-with the chosen significance level of $0.05$. We could also chose values of $z$ for which the Geweke's statistic needs to be within and use this as significance level. 
+with the chosen significance level of $0.05$. We could also chose a interval of $z$ for which the Geweke's statistic needs to be within to have convergence. 
 We calculated the Geweke diagnostic with the code, removing the burn-in from the chain. 
 %
 <<3c, eval = FALSE>>==
@@ -71,7 +71,7 @@ We calculated the Geweke diagnostic with the code, removing the burn-in from the
 <<tableGweke, echo = FALSE>>==
 @
 %
-From the table returned from the code we see that the hypothesis $mathrm{H}_0$ holds, which mean that the chain has converged with a burn-in of $5000$. We can also look at the size of the burn-in and at which size the hypothesis fails to hold. This we did by plotting the  z-Statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
+From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\mathrm{H}_0$ holds, which mean that the chain has converged with a burn-in of $5000$. We can also look at the size of the burn-in and at which size the hypothesis fails to hold. This we did by plotting the  z-statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
 %
 <<plotgeweke, eval = FALSE>>==
 @
