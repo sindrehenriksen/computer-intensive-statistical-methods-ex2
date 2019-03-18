@@ -79,3 +79,7 @@ To get the running time of our MCMC-algorithm we used the R function \texttt{sys
 <<res2, eval=FALSE>>=
 @
 %
+%
+<<timeAccept, eval=FALSE>>=
+@
+%
