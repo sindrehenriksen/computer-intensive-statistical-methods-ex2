@@ -14,7 +14,7 @@ load("data/samples.Rdata")
 ## ---- dfCreate
 r_cols <- sort(sample(1:input$n,3,replace = F))
 M <- length(samples$eta[,1])
-burnin = 5000
+burnin = 20000
 steps <- seq(1,M)
 burnin_step = seq(burnin,M)
 
@@ -156,7 +156,7 @@ ggsave("../figures/acf.pdf", plot = fig_3b, device = NULL,
 
 library(coda)
 library(kableExtra)
-z_scores <- geweke.diag(MCMC_list[,2:9], frac1=0.1, frac2=0.5)$z
+z_scores <- geweke.diag(MCMC_list[seq(20000,M),2:9], frac1=0.1, frac2=0.5)$z
 geweke_diag <- data.frame(
   z_scores = z_scores,
   p_values = 2*pnorm(abs(z_scores),lower.tail = FALSE)
@@ -173,12 +173,11 @@ kable(geweke_diag,caption = "\\label{tab:geweke}Result of Gweke Statistic on the
 ## ---- break
 ## ---- plotgeweke
 testBurningGeweke <- function(MCMC_list, M){
-  z_scores_burnin <- data.frame()
   burn = numeric()
   z_name = numeric()
   z = numeric()
   for (i in seq(1,11)){
-    burnin[i] = 500*(i-1)
+    burnin[i] = 2000*(i-1)
     z_score<-geweke.diag(MCMC_list[seq(burnin[i],M),2:9], 
                          frac1=0.1, frac2=0.5)$z
     burn = c(burn,rep(burnin[i],8))
@@ -193,12 +192,11 @@ z_scores_burnin<-testBurningGeweke(MCMC_list, M)
 burnin_test_plot<-ggplot()+
   geom_point(data= z_scores_burnin,
              aes(x=z_statistic,y=burnin,color=Parameter),size=2)+
-  geom_rect(aes(xmin=-1.6,xmax = 1.6, ymin=-100,ymax=5100 ), 
+  geom_rect(aes(xmin=-1.6,xmax = 1.6, ymin=-200,ymax=20200 ), 
             fill = "blue",alpha = 0.1)+ 
   ylab("Burn-in")+
   xlab("Z-statistic")+
-  labs(colour="Parameter")+
-  xlim(c(-2,2))
+  labs(colour="Parameter")
 burnin_test_plot
 ## ---- break
 ggsave("../figures/test_burnin.pdf", plot = burnin_test_plot, 

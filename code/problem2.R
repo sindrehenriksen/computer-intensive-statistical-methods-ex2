@@ -106,23 +106,20 @@ acceptance_prob <- function(input,eta_prop,eta,kappa_v,u){
 # running MCMC simulation
 # return a list of eta, u, kappa_u, kappa_v, and the acceptance
 M <- 70000
-set.seed(1)
+set.seed(123)
 myMCMC <- function(input, M){
   # for keeping track of completition
   pb <- txtProgressBar(min = 0, max = M, style = 3)
-  # choosing kappa from the prior
-  kappa_u = rgamma(n = 1, shape = input$alpha, rate = input$beta)
-  kappa_v = rgamma(n = 1, shape = input$alpha, rate = input$beta)
   # chosen u
-  u = c(rep(0.0, input$n))
+  u = runif(input$n)
   # eta from proposal density
-  eta = r_eta_prop(input,u,u,kappa_v)
+  eta = r_eta_prop(input,u,u,kappa_v =180)
   # storing all etas,vs, kappas and the acceptance prob
   eta_samples = matrix(NA,nrow=M,ncol=input$n)
   u_samples = matrix(NA,nrow=M,ncol=input$n)
-  kappa_u_samples <- vector()
-  kappa_v_samples <- vector()
-  accept_vec <- vector()
+  kappa_u_samples = vector()
+  kappa_v_samples = vector()
+  accept_vec = vector()
   for (i in seq(1,M)){
     # for keeping track of completition
     setTxtProgressBar(pb, i)
@@ -140,7 +137,7 @@ myMCMC <- function(input, M){
     }
     eta_samples[i,] = eta
     u_samples[i,] = u
-    accept_vec <- c(accept_vec, accept_prob)
+    accept_vec = c(accept_vec, accept_prob)
     kappa_u_samples[i] = kappa_u
     kappa_v_samples[i] = kappa_v
   }
@@ -162,12 +159,12 @@ samples$run_time = run_time
 save(samples,file = "data/samples.Rdata")
 save(input,file ="data/input.Rdata")
 cat("Average acceptance rate:", mean(samples$accept))
-cat("Run time of MCMC:", run_time)
+cat("Run time of MCMC:", as.numeric(run_time[1]))
 ## ---- break
 runaccept <- data.frame(run_time = as.numeric(samples$run_time[1]), 
                         accept = mean(samples$accept))
 save(file = "../code/data/runaccept.Rdata",runaccept)
 ## ---- timeAccept
-load("../code/data/runaccpet.Rdata")
+load("../code/data/runaccept.Rdata")
 cat("Average acceptance rate:", runaccept$accept)
 cat("Run time of MCMC:", runaccept$run_time)
