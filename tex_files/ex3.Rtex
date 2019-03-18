@@ -71,7 +71,7 @@ We calculate the Geweke diagnostic with the following code, removing the burn-in
 <<tableGweke, echo = FALSE>>==
 @
 %
-From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\mathrm{H}_0$ is accepted for $\kappa_u$, $\kappa_v$ and the three randomly chosen components of $\vect{u}$ and $\vect{v}$, which indicates that the chain has converged with a burn-in of $20000$. We can also look at the size of the burn-in and at which values the hypothesis doesn't hold. This we did by plotting the  z-statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
+From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\mathrm{H}_0$ is accepted for $\kappa_u$, $\kappa_v$ and the three randomly chosen components of $\vect{u}$ and $\vect{v}$, which indicates that the chain has converged with a burn-in of $20000$. We can also look at the size of the burn-in and at which values the hypothesis doesn't hold. This we have done by plotting the z-statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
 %
 <<plotgeweke, eval = FALSE>>==
 @
@@ -83,4 +83,4 @@ From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\
     \label{fig:test_burnin}
 \end{figure}
 
-From figure \ref{fig:test_burnin} we can see that the chain has converge with a burn-in of $18000$ according to the Geweke diagnostic. So by using this information we chose to use the burn-in of $20000$, which also has converge by the plot. 
+From figure \ref{fig:test_burnin} we can see that the chain has converged with a burn-in of $18000$ according to the Geweke diagnostic. We choose to use a burn-in of $20000$ samples.
