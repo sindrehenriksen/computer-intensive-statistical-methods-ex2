@@ -45,10 +45,10 @@ Using the same samples we will now look at their autocorrelation. We will do thi
 In figure \ref{fig:acf} we can see that the autocorrelation for $\vect{v}$ is small, but we can see that for the $\vect{u}$ components there is a small autocorrelation for small lags and they look to be independent around lag$\approx20$. On the other hand $\kappa_u$ and $\kappa_v$ we can see a larger degree of autocorrelation. $\kappa_v$ is close to independent around a lag of size $70$ and $\kappa_u$ needs almost a lag of $150$ to be independent. 
 
 \paragraph{(c)}
-Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. Geweke's diagnostic is done by comparing the location of the sampled parameter on two different time intervals. Usually one compares the last half of the chain with some smaller part in the start of the chain. We have chosen the first part to be $10\%$ of the start of the chain after the burn-in and the last interval to be $50\%$ of the last part of the chain. Let first interval of a parameter be $\theta_A$ of length $n_A$, with the mean $\bar{\Theta}_A$ and the standard error $s_A$. And the last interval be $\Theta_B$ of length $n_B$, with mean $\bar{\Theta}_B$ and standard error $s_B$. Then the Geweke's statistics is given by Equation \eqref{eq:z-statistics}.
+Next we will test the convergence of the Markov chain using the \texttt{geweke.diag} function from the R-package \textbf{coda}. Geweke's diagnostic is done by comparing the location of the sampled parameter on two different time intervals. Usually one compares the last half of the chain with some smaller part in the start of the chain. We have chosen the first part to be $10\%$ of the start of the chain after the burn-in and the last interval to be $50\%$ of the last part of the chain. Let first interval of a parameter be $\Theta_A$ of length $n_A$, with the mean $\bar{\Theta}_A$ and the standard error $s_A$. And the last interval be $\Theta_B$ of length $n_B$, with mean $\bar{\Theta}_B$ and standard error $s_B$. Then the Geweke's statistics is given by Equation \eqref{eq:z-statistics}.
 
 \begin{equation}
-    Z_{\Theta} = \frac{\bar{\Theta}_A-\bar{\Theta}_B}{\sqrt{\frac{S_A}{n_A}+\frac{s_B}{n_B}}}
+    Z_{\Theta} = \frac{\bar{\Theta}_A-\bar{\Theta}_B}{\sqrt{\frac{s_A}{n_A}+\frac{s_B}{n_B}}}
     \label{eq:z-statistics}
 \end{equation}
 
