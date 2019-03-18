@@ -161,7 +161,7 @@ save(input,file ="data/input.Rdata")
 cat("Average acceptance rate:", mean(samples$accept))
 cat("Run time of MCMC:", as.numeric(run_time[1]))
 ## ---- break
-runaccept <- data.frame(run_time = as.numeric(samples$run_time[1]), 
+runaccept <- data.frame(run_time=as.numeric(samples$run_time[1]), 
                         accept = mean(samples$accept))
 save(file = "../code/data/runaccept.Rdata",runaccept)
 ## ---- timeAccept
