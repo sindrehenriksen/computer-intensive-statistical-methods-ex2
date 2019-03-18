@@ -12,7 +12,7 @@ load("data/input.Rdata")
 load("data/samples.Rdata")
 
 ## ---- dfCreate
-r_cols <- sort(sample(1:input$n,3,replace = F))
+r_cols <- c(157,222,429)
 M <- length(samples$eta[,1])
 burnin = 20000
 steps <- seq(1,M)
@@ -168,7 +168,8 @@ kable(geweke_diag,caption =
 save(file = "../code/data/geweke_diag.Rdata",geweke_diag)
 ## ---- tableGweke
 load("../code/data/geweke_diag.Rdata")
-kable(geweke_diag,caption = "\\label{tab:geweke}Result of Gweke Statistic on the parameters",booktabs = T) 
+kable(geweke_diag,caption = "\\label{tab:geweke}Result of Gweke Statistic
+      on the parameters",booktabs = T) 
 
 ## ---- break
 ## ---- plotgeweke
