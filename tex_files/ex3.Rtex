@@ -63,7 +63,7 @@ This mean that we can test the convergence of the chain on the p-values of the z
     \enspace \textrm{vs.}\enspace \mathrm{H}_1: P(|Z| \geq |z|) < 0.05,
 \end{equation}
 with the chosen significance level of $0.05$. We could also chose a interval of $z$ for which the Geweke's statistic needs to be within to have convergence. 
-We calculated the Geweke diagnostic with the code, removing the burn-in from the chain. 
+We calculate the Geweke diagnostic with the following code, removing the burn-in from the chain. 
 %
 <<3c, eval = FALSE>>==
 @
@@ -71,7 +71,7 @@ We calculated the Geweke diagnostic with the code, removing the burn-in from the
 <<tableGweke, echo = FALSE>>==
 @
 %
-From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\mathrm{H}_0$ holds, which mean that the chain has converged with a burn-in of $20000$. We can also look at the size of the burn-in and at which values the hypothesis doesn't hold. This we did by plotting the  z-statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
+From Table \ref{tab:geweke} returned from the code we see that the hypothesis $\mathrm{H}_0$ is accepted for $\kappa_u$, $\kappa_v$ and the three randomly chosen components of $\vect{u}$ and $\vect{v}$, which indicates that the chain has converged with a burn-in of $20000$. We can also look at the size of the burn-in and at which values the hypothesis doesn't hold. This we did by plotting the  z-statistics for different sizes of burn-in, and since it is normally distributed we can decide which interval the values need to be within for the sequence to have converged. A interval of $Z\in[-1.6,1.6]$ gives a significance level of $0.055$.
 %
 <<plotgeweke, eval = FALSE>>==
 @
